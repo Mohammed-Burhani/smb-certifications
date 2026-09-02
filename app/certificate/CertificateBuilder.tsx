@@ -32,31 +32,31 @@ type CertificateRecord = { id: string; draft: CertificateDraft; savedAt?: string
 const itemRows: Item[] = [
   { wo: "5375/1",  sr: "1",  description: "CS, SEAMLESS, ECCENTRIC REDUCER, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 16\" NB X SCH STD, IBR.", size: '16" NB', sch: "SCH STD", id: "CT0754", ht: "TPZ 4238", qty: "1" },
   { wo: "5375/4",  sr: "4",  description: "CS, SEAMLESS, ELBOW 45° LR, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 6\" NB X SCH STD, R=1.5D, IBR.", size: '6" NB', sch: "SCH STD", id: "CT0832", ht: "HF", qty: "10" },
-  { wo: "5375/6",  sr: "6",  description: "CS, SEAMLESS, EQUAL TEE, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 16\" NB X SCH XS, IBR.", size: '16" NB', sch: "SCH XS", id: "CT0778", ht: "TPZ 4238", qty: "1" },
-  { wo: "5375/8",  sr: "8",  description: "CS, SEAMLESS, ELBOW 90° LR, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 3\" NB X SCH 80, R=1.5D, IBR.", size: '3" NB', sch: "SCH 80", id: "CT0844", ht: "TPZ 4231", qty: "6" },
-  { wo: "5375/11", sr: "11", description: "CS, SEAMLESS, ELBOW 45° LR, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 3\" NB X SCH 80, R=1.5D, IBR.", size: '3" NB', sch: "SCH 80", id: "CT0844", ht: "TPZ 4231", qty: "2" },
-  { wo: "5375/14", sr: "14", description: "CS, SEAMLESS, ELBOW 45° LR, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 14\" NB X SCH XS, R=1.5D, IBR.", size: '14" NB', sch: "SCH XS", id: "CT0804", ht: "TPZ 4231", qty: "1" },
-  { wo: "5375/29", sr: "29", description: "CS, SEAMLESS, ELBOW 90° LR, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 6\" NB X SCH STD, R=1.5D, IBR.", size: '6" NB', sch: "SCH STD", id: "CT0832", ht: "HF", qty: "6" },
-  { wo: "5375/30", sr: "30", description: "CS, SEAMLESS, ELBOW 90° LR, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 3\" NB X SCH 80, R=1.5D, IBR.", size: '3" NB', sch: "SCH 80", id: "CT0844", ht: "TPZ 4231", qty: "1" },
+  // { wo: "5375/6",  sr: "6",  description: "CS, SEAMLESS, EQUAL TEE, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 16\" NB X SCH XS, IBR.", size: '16" NB', sch: "SCH XS", id: "CT0778", ht: "TPZ 4238", qty: "1" },
+  // { wo: "5375/8",  sr: "8",  description: "CS, SEAMLESS, ELBOW 90° LR, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 3\" NB X SCH 80, R=1.5D, IBR.", size: '3" NB', sch: "SCH 80", id: "CT0844", ht: "TPZ 4231", qty: "6" },
+  // { wo: "5375/11", sr: "11", description: "CS, SEAMLESS, ELBOW 45° LR, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 3\" NB X SCH 80, R=1.5D, IBR.", size: '3" NB', sch: "SCH 80", id: "CT0844", ht: "TPZ 4231", qty: "2" },
+  // { wo: "5375/14", sr: "14", description: "CS, SEAMLESS, ELBOW 45° LR, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 14\" NB X SCH XS, R=1.5D, IBR.", size: '14" NB', sch: "SCH XS", id: "CT0804", ht: "TPZ 4231", qty: "1" },
+  // { wo: "5375/29", sr: "29", description: "CS, SEAMLESS, ELBOW 90° LR, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 6\" NB X SCH STD, R=1.5D, IBR.", size: '6" NB', sch: "SCH STD", id: "CT0832", ht: "HF", qty: "6" },
+  // { wo: "5375/30", sr: "30", description: "CS, SEAMLESS, ELBOW 90° LR, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 3\" NB X SCH 80, R=1.5D, IBR.", size: '3" NB', sch: "SCH 80", id: "CT0844", ht: "TPZ 4231", qty: "1" },
 ];
 
 const chemistryRows: Chemistry[] = [
   { id: "CT0754", c: "0.161", cr: "0.013", ni: "0.012", mo: "0.003", mn: "1.020", p: "0.014", s: "0.002", si: "0.222", v: "0.001", cu: "0.006", ce: "0.335", ys: "289.99", uts: "482.54", gl: "50.0", el: "46.00", bend: "NA", flat: "OK" },
   { id: "CT0832", c: "0.135", cr: "0.013", ni: "0.005", mo: "0.001", mn: "0.667", p: "0.013", s: "0.005", si: "0.267", v: "0.002", cu: "0.002", ce: "0.250", ys: "308.97", uts: "477.20", gl: "50.0", el: "41.00", bend: "NA", flat: "OK" },
-  { id: "CT0778", c: "0.182", cr: "0.028", ni: "0.015", mo: "0.002", mn: "1.202", p: "0.015", s: "0.005", si: "0.262", v: "0.005", cu: "0.006", ce: "0.366", ys: "338.43", uts: "479.50", gl: "50.0", el: "43.80", bend: "NA", flat: "OK" },
-  { id: "CT0844", c: "0.133", cr: "0.016", ni: "0.003", mo: "0.001", mn: "0.674", p: "0.015", s: "0.007", si: "0.271", v: "0.005", cu: "0.006", ce: "0.249", ys: "329.41", uts: "446.86", gl: "50.0", el: "46.60", bend: "NA", flat: "OK" },
+  // { id: "CT0778", c: "0.182", cr: "0.028", ni: "0.015", mo: "0.002", mn: "1.202", p: "0.015", s: "0.005", si: "0.262", v: "0.005", cu: "0.006", ce: "0.366", ys: "338.43", uts: "479.50", gl: "50.0", el: "43.80", bend: "NA", flat: "OK" },
+  // { id: "CT0844", c: "0.133", cr: "0.016", ni: "0.003", mo: "0.001", mn: "0.674", p: "0.015", s: "0.007", si: "0.271", v: "0.005", cu: "0.006", ce: "0.249", ys: "329.41", uts: "446.86", gl: "50.0", el: "46.60", bend: "NA", flat: "OK" },
 ];
 
 const rawLabels = [
   "Process of manufacture", "Fully killed/Rimmed", "Specification", "Heat number",
-  "Size", "Test Certificate No. & Date", "Name of the maker", "Name of the inspecting authority",
+  "Size", "Test Certificate No. & Date",
 ];
 
 const rawMaterials: RawMaterial[] = [
-  { id: "CT0754", values: ["BF/EAF/EOF/RF/VD/CCM/ROLLING", "Fully killed & fine grained", "A 106 GR.B", "AAB1145 (ID NO:- CT0754)", "406.4 mm OD X 12.7 mm THK PIPE", "MSL-14/IBR/2414/1/2023 Dt:-09.11.2023", "MAHARASHTRA SEAMLESS LIMITED", "WELL KNOWN PIPE & TUBE MAKER"] },
-  { id: "CT0832", values: ["BF/EAF/EOF/RF/VD/CCM/ROLLING", "Fully killed & fine grained", "A 106 GR.B", "AA4184 (ID NO:CT0832)", "114.3 mm OD X 7.8 mm THK PIPE", "MSL-7/IBR/0284/2/2025 Dt:-29.04.2025", "MAHARASHTRA SEAMLESS LIMITED", "WELL KNOWN PIPE & TUBE MAKER"] },
-  { id: "CT0778", values: ["BF/EAF/EOF/RF/VD/CCM/ROLLING", "Fully killed & fine grained", "A 106 GR.B", "AAB1424 (ID NO:- CT0778)", "457 mm OD X 12.7 mm THK PIPE", "MSL-14/IBR/510/1/2024 Dt:-27.05.2024", "MAHARASHTRA SEAMLESS LIMITED", "WELL KNOWN PIPE & TUBE MAKER"] },
-  { id: "CT0844", values: ["BF/EAF/EOF/RF/VD/CCM/ROLLING", "Fully killed & fine grained", "A 106 GR.B", "AA15166 (ID NO:- CT0844)", "88.9 mm OD X 7.62 mm THK", "MSL-7/IBR/1344/3/2025 Dt:-11.09.2025", "MAHARASHTRA SEAMLESS LIMITED", "WELL KNOWN PIPE & TUBE MAKER"] },
+  { id: "CT0754", values: ["BF/EAF/EOF/RF/VD/CCM/ROLLING", "Fully killed & fine grained", "A 106 GR.B", "AAB1145 (ID NO:- CT0754)", "406.4 mm OD X 12.7 mm THK PIPE", "MSL-14/IBR/2414/1/2023 Dt:-09.11.2023"] },
+  { id: "CT0832", values: ["BF/EAF/EOF/RF/VD/CCM/ROLLING", "Fully killed & fine grained", "A 106 GR.B", "AA4184 (ID NO:CT0832)", "114.3 mm OD X 7.8 mm THK PIPE", "MSL-7/IBR/0284/2/2025 Dt:-29.04.2025"] },
+  // { id: "CT0778", values: ["BF/EAF/EOF/RF/VD/CCM/ROLLING", "Fully killed & fine grained", "A 106 GR.B", "AAB1424 (ID NO:- CT0778)", "457 mm OD X 12.7 mm THK PIPE", "MSL-14/IBR/510/1/2024 Dt:-27.05.2024"] },
+  // { id: "CT0844", values: ["BF/EAF/EOF/RF/VD/CCM/ROLLING", "Fully killed & fine grained", "A 106 GR.B", "AA15166 (ID NO:- CT0844)", "88.9 mm OD X 7.62 mm THK", "MSL-7/IBR/1344/3/2025 Dt:-11.09.2025"] },
 ];
 
 const initialDraft: CertificateDraft = {
