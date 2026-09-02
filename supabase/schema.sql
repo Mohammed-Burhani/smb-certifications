@@ -53,3 +53,25 @@ for all
 to authenticated
 using (auth.uid() is not null)
 with check (auth.uid() is not null);
+
+-- Company assets: single shared row holding logo/badges/stamps used on every certificate.
+create table if not exists public.company_assets (
+  id         text        primary key default 'default',
+  images     jsonb       not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+
+drop trigger if exists company_assets_set_updated_at on public.company_assets;
+create trigger company_assets_set_updated_at
+before update on public.company_assets
+for each row execute function public.set_updated_at();
+
+alter table public.company_assets enable row level security;
+
+drop policy if exists "Authenticated admin company assets access" on public.company_assets;
+create policy "Authenticated admin company assets access"
+on public.company_assets
+for all
+to authenticated
+using (auth.uid() is not null)
+with check (auth.uid() is not null);

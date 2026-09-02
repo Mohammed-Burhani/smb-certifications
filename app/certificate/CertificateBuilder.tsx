@@ -11,7 +11,19 @@ import {
 } from "@/lib/certificates";
 import { signOutAction } from "@/app/actions/auth";
 import { createClient } from "@/lib/supabase/client";
+import {
+  emptyCompanyImages,
+  getRemoteCompanyAssets,
+  readLocalCompanyAssets,
+  saveRemoteCompanyAssets,
+  writeLocalCompanyAssets,
+} from "@/lib/companyAssets";
+import type { CompanyImages } from "@/lib/companyAssets";
 import type { CertificateDraft, Chemistry, Images, Item, RawMaterial } from "./types";
+
+const sharedImageKeys: (keyof CompanyImages)[] = ["logo", "badge1", "badge2", "badge3", "companyStamp", "inspectionStamp"];
+const isSharedImageKey = (key: keyof Images): key is keyof CompanyImages =>
+  (sharedImageKeys as (keyof Images)[]).includes(key);
 
 type CertificateRecord = { id: string; draft: CertificateDraft; savedAt?: string };
 
@@ -306,6 +318,50 @@ export default function CertificateBuilder() {
   // ── Query: load certificate list from Supabase ───────────────────────────
   const certificatesQuery = useQuery({ queryKey: ["certificates"], queryFn: listCertificates });
 
+  // ── Shared company assets (logo, badges, stamps) — local-first so they show up
+  // instantly on every certificate, including brand-new drafts, regardless of whether
+  // the optional Supabase `company_assets` table has been migrated yet. ──
+  const [companyImages, setCompanyImages] = useState<CompanyImages>(() => readLocalCompanyAssets());
+  const hasSeededCompanyImages = useRef(false);
+
+  const persistCompanyImages = useCallback((next: CompanyImages) => {
+    setCompanyImages(next);
+    writeLocalCompanyAssets(next);
+    saveRemoteCompanyAssets(next);
+  }, []);
+
+  // Pull in the remote copy once (if the table exists), filling in only keys we
+  // don't already have locally so an upload made on another device is picked up.
+  useEffect(() => {
+    getRemoteCompanyAssets().then((remote) => {
+      if (!remote) return;
+      setCompanyImages((current) => {
+        const merged = { ...current };
+        let changed = false;
+        sharedImageKeys.forEach((key) => {
+          if (remote[key] && !current[key]) { merged[key] = remote[key]; changed = true; }
+        });
+        if (changed) writeLocalCompanyAssets(merged);
+        return changed ? merged : current;
+      });
+    });
+  }, []);
+
+  // One-time migration: if nothing shared is stored yet, adopt whatever any existing
+  // certificate already had uploaded per-certificate (pre-fix data) as the shared baseline.
+  useEffect(() => {
+    if (hasSeededCompanyImages.current || certificates.length === 0) return;
+    hasSeededCompanyImages.current = true;
+    if (sharedImageKeys.some((key) => companyImages[key])) return;
+    const seeded: CompanyImages = { ...emptyCompanyImages };
+    let found = false;
+    sharedImageKeys.forEach((key) => {
+      const source = certificates.find((c) => c.draft.images[key]);
+      if (source) { seeded[key] = source.draft.images[key]; found = true; }
+    });
+    if (found) persistCompanyImages(seeded);
+  }, [certificates, companyImages, persistCompanyImages]);
+
   // Hydrate local state once Supabase data arrives (runs only once per session).
   useEffect(() => {
     if (!certificatesQuery.data || hasHydrated.current) return;
@@ -435,10 +491,39 @@ export default function CertificateBuilder() {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => setDraft((c) => ({ ...c, images: { ...c.images, [key]: String(reader.result) } }));
+    reader.onload = () => {
+      const result = String(reader.result);
+      if (isSharedImageKey(key)) {
+        persistCompanyImages({ ...companyImages, [key]: result });
+        setToast({ message: "Company image updated for every certificate.", kind: "success" });
+        return;
+      }
+      setDraft((c) => {
+        const updated = { ...c, images: { ...c.images, [key]: result } };
+        saveMutation.mutate({ id: activeCertificateId, payload: updated });
+        return updated;
+      });
+    };
     reader.readAsDataURL(file);
   };
-  const remove = (key: keyof Images) => setDraft((c) => ({ ...c, images: { ...c.images, [key]: null } }));
+  const remove = (key: keyof Images) => {
+    if (isSharedImageKey(key)) {
+      persistCompanyImages({ ...companyImages, [key]: null });
+      setToast({ message: "Company image removed for every certificate.", kind: "success" });
+      return;
+    }
+    setDraft((c) => {
+      const updated = { ...c, images: { ...c.images, [key]: null } };
+      saveMutation.mutate({ id: activeCertificateId, payload: updated });
+      return updated;
+    });
+  };
+
+  // Shared company images always win over whatever a certificate draft happens to hold.
+  const mergedImages: Images = { ...draft.images };
+  sharedImageKeys.forEach((key) => {
+    if (companyImages[key]) mergedImages[key] = companyImages[key];
+  });
 
   const updateItem  = (index: number, key: keyof Item, value: string) =>
     setValue("items", draft.items.map((row, i) => (i === index ? { ...row, [key]: value } : row)));
@@ -515,7 +600,7 @@ export default function CertificateBuilder() {
             isLoading={certificatesQuery.isLoading}
             isError={certificatesQuery.isError}
           />
-          <UploadPanel images={draft.images} upload={upload} remove={remove} />
+          <UploadPanel images={mergedImages} upload={upload} remove={remove} />
         </div>
 
         <section className="preview-wrap">
@@ -523,17 +608,17 @@ export default function CertificateBuilder() {
 
             {/* Certificate header */}
             <header className="certificate-header">
-              <ImageSlot src={draft.images.logo} label="SMB" compact />
+              <ImageSlot src={mergedImages.logo} label="SMB" compact />
               <div className="company-block">
                 <Field value={draft.company.name}    onChange={(v) => setCompany("name", v)}    className="company-name"  label="Company name" />
                 <Field value={draft.company.address} onChange={(v) => setCompany("address", v)} className="centered-line" label="Company address" />
                 <Field value={draft.company.contact} onChange={(v) => setCompany("contact", v)} className="centered-line" label="Company contact" />
               </div>
               <div className="badges">
-                <ImageSlot src={draft.images.badge1} label="ISO"  compact />
-                <ImageSlot src={draft.images.badge2} label="QMS"  compact />
-                <ImageSlot src={draft.images.badge3} label="PESO" compact />
-                <div className="ce-mark">CE</div>
+                <ImageSlot src={mergedImages.badge1} label="ISO"  compact />
+                <ImageSlot src={mergedImages.badge2} label="QMS"  compact />
+                <ImageSlot src={mergedImages.badge3} label="PESO" compact />
+                {/* <div className="ce-mark">CE</div> */}
               </div>
             </header>
 
@@ -566,7 +651,6 @@ export default function CertificateBuilder() {
             {/* Items */}
             <section className="item-section">
               <div className="item-caption">
-                Item Description{" "}
                 <button type="button" className="add-item print-hidden" onClick={addItem}>+ Add item</button>
               </div>
               <div className="item-table-wrap">
@@ -692,10 +776,10 @@ export default function CertificateBuilder() {
                 <Field area value={draft.declaration} onChange={(v) => setValue("declaration", v)} label="Declaration" />
               </div>
               <div className="stamp-group">
-                <ImageSlot src={draft.images.companyStamp} label="Company stamp" compact />
+                <ImageSlot src={mergedImages.companyStamp} label="Company stamp" compact />
               </div>
               <div className="inspection-group">
-                <ImageSlot src={draft.images.inspectionStamp} label="Inspection authority stamp" compact />
+                <ImageSlot src={mergedImages.inspectionStamp} label="Inspection authority stamp" compact />
                 <Field value={draft.inspection.person}        onChange={(v) => setValue("inspection", { ...draft.inspection, person: v })} />
                 <Field value={draft.inspection.authorization} onChange={(v) => setValue("inspection", { ...draft.inspection, authorization: v })} />
                 <Field value={draft.inspection.date}          onChange={(v) => setValue("inspection", { ...draft.inspection, date: v })} />
