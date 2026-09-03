@@ -6,5 +6,5 @@ export type CertificateDraft = {
   company: { name: string; address: string; contact: string };
   metadata: { client: string; workOrder: string; certificate: string; date: string; po: string; poDate: string; authorityCertificate: string; authorityDate: string; regulation: string };
   items: Item[]; specs: string[]; heatTreatment: string; chemistry: Chemistry[]; rawMaterials: RawMaterial[];
-  compliance: string; declaration: string; signature: { name: string; title: string }; inspection: { person: string; authorization: string; date: string }; footer: { place: string; date: string; contactName: string; phone: string; address: string; email: string }; images: Images;
+  compliance: string; declaration: string; signature: { name: string; title: string }; inspection: { person: string; authorization: string; date: string }; footer: { place: string; date: string; tagline: string }; images: Images;
 };

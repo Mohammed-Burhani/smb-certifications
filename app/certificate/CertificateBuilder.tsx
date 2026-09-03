@@ -49,21 +49,21 @@ const chemistryRows: Chemistry[] = [
 
 const rawLabels = [
   "Process of manufacture", "Fully killed/Rimmed", "Specification", "Heat number",
-  "Size", "Test Certificate No. & Date",
+  "Size", "Test Certificate No. & Date", "Name of the Maker", "Name of Inspection Authority",
 ];
 
 const rawMaterials: RawMaterial[] = [
-  { id: "CT0754", values: ["BF/EAF/EOF/RF/VD/CCM/ROLLING", "Fully killed & fine grained", "A 106 GR.B", "AAB1145 (ID NO:- CT0754)", "406.4 mm OD X 12.7 mm THK PIPE", "MSL-14/IBR/2414/1/2023 Dt:-09.11.2023"] },
-  { id: "CT0832", values: ["BF/EAF/EOF/RF/VD/CCM/ROLLING", "Fully killed & fine grained", "A 106 GR.B", "AA4184 (ID NO:CT0832)", "114.3 mm OD X 7.8 mm THK PIPE", "MSL-7/IBR/0284/2/2025 Dt:-29.04.2025"] },
-  // { id: "CT0778", values: ["BF/EAF/EOF/RF/VD/CCM/ROLLING", "Fully killed & fine grained", "A 106 GR.B", "AAB1424 (ID NO:- CT0778)", "457 mm OD X 12.7 mm THK PIPE", "MSL-14/IBR/510/1/2024 Dt:-27.05.2024"] },
-  // { id: "CT0844", values: ["BF/EAF/EOF/RF/VD/CCM/ROLLING", "Fully killed & fine grained", "A 106 GR.B", "AA15166 (ID NO:- CT0844)", "88.9 mm OD X 7.62 mm THK", "MSL-7/IBR/1344/3/2025 Dt:-11.09.2025"] },
+  { id: "CT0754", values: ["BF/EAF/EOF/RF/VD/CCM/ROLLING", "Fully killed & fine grained", "A 106 GR.B", "AAB1145 (ID NO:- CT0754)", "406.4 mm OD X 12.7 mm THK PIPE", "MSL-14/IBR/2414/1/2023 Dt:-09.11.2023", "MAHARASHTRA SEAMLESS LIMITED", "WELL KNOWN PIPE & TUBE MAKER"] },
+  { id: "CT0832", values: ["BF/EAF/EOF/RF/VD/CCM/ROLLING", "Fully killed & fine grained", "A 106 GR.B", "AA4184 (ID NO:CT0832)", "114.3 mm OD X 7.8 mm THK PIPE", "MSL-7/IBR/0284/2/2025 Dt:-29.04.2025", "MAHARASHTRA SEAMLESS LIMITED", "WELL KNOWN PIPE & TUBE MAKER"] },
+  // { id: "CT0778", values: ["BF/EAF/EOF/RF/VD/CCM/ROLLING", "Fully killed & fine grained", "A 106 GR.B", "AAB1424 (ID NO:- CT0778)", "457 mm OD X 12.7 mm THK PIPE", "MSL-14/IBR/510/1/2024 Dt:-27.05.2024", "MAHARASHTRA SEAMLESS LIMITED", "WELL KNOWN PIPE & TUBE MAKER"] },
+  // { id: "CT0844", values: ["BF/EAF/EOF/RF/VD/CCM/ROLLING", "Fully killed & fine grained", "A 106 GR.B", "AA15166 (ID NO:- CT0844)", "88.9 mm OD X 7.62 mm THK", "MSL-7/IBR/1344/3/2025 Dt:-11.09.2025", "MAHARASHTRA SEAMLESS LIMITED", "WELL KNOWN PIPE & TUBE MAKER"] },
 ];
 
 const initialDraft: CertificateDraft = {
   company: {
-    name: "SMB Fittings",
+    name: "SMB Fitting Industry",
     address: "New No. 404/406, Thiruvottiyur High Road, Tondiarpet, Chennai - 600081, Tamil Nadu, India",
-    contact: "Contact: +91 9840952253  ·  E-Mail: yusuf@smbfittingindustry.com",
+    contact: "Contact: +91 9840952253  ·  E-Mail: fittings@smbfittingindustry.com",
   },
   metadata: {
     client: "RELIANCE INDUSTRIES LIMITED", workOrder: "5375/1,4,6,8,11,14,29,30",
@@ -86,7 +86,7 @@ const initialDraft: CertificateDraft = {
   declaration: "We have satisfied ourselves and the valve / fittings has been constructed and tested in accordance with the requirements of the Indian Boiler Regulations, 1950. We further certify that the particulars entered here are correct.",
   signature: { name: "YUSUF", title: "QC INCHARGE" },
   inspection: { person: "BHARATKUMAR PARMAR", authorization: "IBR-I / AUTHORIZATION NO.: 110/20", date: "27.05.2026" },
-  footer: { place: "CHENNAI", date: "27.05.2026", contactName: "Yusuf", phone: "+91 9840952253", address: "New No. 404/406, Thiruvottiyur High Road, Tondiarpet, Chennai - 600081, Tamil Nadu, India", email: "yusuf@smbfittingindustry.com" },
+  footer: { place: "CHENNAI", date: "27.05.2026", tagline: "Manufacturers & Exporters of Pipe Fittings and Flanges" },
   images: { logo: null, badge1: null, badge2: null, badge3: null, companyStamp: null, inspectionStamp: null, signature: null },
 };
 
@@ -302,7 +302,6 @@ export default function CertificateBuilder() {
   const [activeCertificateId, setActiveCertificateId] = useState<string>("");
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [toast, setToast] = useState<ToastState>(null);
-  const signatureInput = useRef<HTMLInputElement>(null);
   const hasHydrated = useRef(false);
   const queryClient = useQueryClient();
 
@@ -321,13 +320,20 @@ export default function CertificateBuilder() {
   // ── Shared company assets (logo, badges, stamps) — local-first so they show up
   // instantly on every certificate, including brand-new drafts, regardless of whether
   // the optional Supabase `company_assets` table has been migrated yet. ──
-  const [companyImages, setCompanyImages] = useState<CompanyImages>(() => readLocalCompanyAssets());
+  const [companyImages, setCompanyImages] = useState<CompanyImages>(emptyCompanyImages);
   const hasSeededCompanyImages = useRef(false);
 
   const persistCompanyImages = useCallback((next: CompanyImages) => {
     setCompanyImages(next);
     writeLocalCompanyAssets(next);
     saveRemoteCompanyAssets(next);
+  }, []);
+
+  // Read localStorage after mount, not during the initial render — localStorage isn't
+  // available during SSR, and reading it synchronously in useState's initializer would
+  // make the client's first render diverge from the server-rendered HTML (hydration error).
+  useEffect(() => {
+    setCompanyImages(readLocalCompanyAssets());
   }, []);
 
   // Pull in the remote copy once (if the table exists), filling in only keys we
@@ -373,7 +379,18 @@ export default function CertificateBuilder() {
       setCertificates([{ id, draft: freshDraft() }]);
       setActiveCertificateId(id);
     } else {
-      const records = certificatesQuery.data.map((c) => ({ id: c.id, draft: c.payload, savedAt: c.updated_at }));
+      const records = certificatesQuery.data.map((c) => ({
+        id: c.id,
+        draft: {
+          ...c.payload,
+          footer: { ...initialDraft.footer, ...c.payload.footer },
+          rawMaterials: c.payload.rawMaterials.map((block) => ({
+            ...block,
+            values: rawLabels.map((_, i) => block.values[i] ?? ""),
+          })),
+        },
+        savedAt: c.updated_at,
+      }));
       setCertificates(records);
       setActiveCertificateId(records[0].id);
     }
@@ -752,56 +769,28 @@ export default function CertificateBuilder() {
               </div>
             </section>
 
-            {/* Signature section */}
+            {/* Signature / declaration section */}
             <section className="signature-section">
-              <div className="signature-person">
-                <div
-                  className="signature-pad"
-                  onClick={() => signatureInput.current?.click()}
-                  role="button" tabIndex={0}
-                  onKeyDown={(e) => e.key === "Enter" && signatureInput.current?.click()}
-                >
-                  {draft.images.signature
-                    ? <img src={draft.images.signature} alt="Signature" />
-                    : <span>Upload signature</span>}
-                  <input ref={signatureInput} className="hidden-input" type="file" accept="image/*" onChange={upload("signature")} />
-                </div>
-                {draft.images.signature && (
-                  <button type="button" className="signature-remove print-hidden" onClick={() => remove("signature")}>Remove signature</button>
-                )}
-                <Field value={draft.signature.name}  onChange={(v) => setValue("signature", { ...draft.signature, name: v })}  className="sign-name" />
-                <Field value={draft.signature.title} onChange={(v) => setValue("signature", { ...draft.signature, title: v })} className="sign-title" />
-              </div>
+              <Field value={draft.signature.title} onChange={(v) => setValue("signature", { ...draft.signature, title: v })} className="sign-title" />
               <div className="declaration">
                 <Field area value={draft.declaration} onChange={(v) => setValue("declaration", v)} label="Declaration" />
               </div>
-              <div className="stamp-group">
-                <ImageSlot src={mergedImages.companyStamp} label="Company stamp" compact />
-              </div>
-              <div className="inspection-group">
-                <ImageSlot src={mergedImages.inspectionStamp} label="Inspection authority stamp" compact />
-                <Field value={draft.inspection.person}        onChange={(v) => setValue("inspection", { ...draft.inspection, person: v })} />
-                <Field value={draft.inspection.authorization} onChange={(v) => setValue("inspection", { ...draft.inspection, authorization: v })} />
-                <Field value={draft.inspection.date}          onChange={(v) => setValue("inspection", { ...draft.inspection, date: v })} />
-              </div>
             </section>
 
-            {/* Footer */}
-            <footer className="certificate-footer">
+            {/* Place / date + closing rule, pinned to the bottom of the sheet */}
+            <div className="certificate-footer">
               <div className="footer-place">
                 <span>PLACE:-</span>
                 <Field value={draft.footer.place} onChange={(v) => setValue("footer", { ...draft.footer, place: v })} />
                 <span>DATE:-</span>
                 <Field value={draft.footer.date}  onChange={(v) => setValue("footer", { ...draft.footer, date: v })} />
               </div>
-              <div className="footer-contact">
-                <Field value={draft.footer.contactName} onChange={(v) => setValue("footer", { ...draft.footer, contactName: v })} className="footer-contact-name" label="Contact name" />
-                <Field value={draft.footer.phone}       onChange={(v) => setValue("footer", { ...draft.footer, phone: v })}       className="footer-contact-phone" label="Phone number" />
-                <Field area value={draft.footer.address} onChange={(v) => setValue("footer", { ...draft.footer, address: v })}    className="footer-address"       label="Address" />
-                <Field value={draft.footer.email}       onChange={(v) => setValue("footer", { ...draft.footer, email: v })}       className="footer-email"         label="Email address" />
+              <div className="rule" />
+              <div className="footer-caption">
+                <span className="page-count">Page 1 of 1</span>
+                <Field area value={draft.footer.tagline} onChange={(v) => setValue("footer", { ...draft.footer, tagline: v })} className="footer-tagline" label="Company tagline" />
               </div>
-              <span className="page-count">Page 1 of 1</span>
-            </footer>
+            </div>
 
           </article>
         </section>
