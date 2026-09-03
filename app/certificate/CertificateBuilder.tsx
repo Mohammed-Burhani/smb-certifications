@@ -99,9 +99,26 @@ function freshDraft(): CertificateDraft {
 function Field({ value, onChange, className = "", area = false, label }: {
   value: string; onChange: (value: string) => void; className?: string; area?: boolean; label?: string;
 }) {
-  const shared = { value, onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.target.value), "aria-label": label };
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  
+  useEffect(() => {
+    if (area && textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+    }
+  }, [value, area]);
+  
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    onChange(e.target.value);
+    if (area && e.target instanceof HTMLTextAreaElement) {
+      e.target.style.height = 'auto';
+      e.target.style.height = e.target.scrollHeight + 'px';
+    }
+  };
+  
+  const shared = { value, onChange: handleChange, "aria-label": label };
   return area
-    ? <textarea {...shared} className={`certificate-input certificate-area ${className}`} />
+    ? <textarea ref={textareaRef} {...shared} className={`certificate-input certificate-area ${className}`} />
     : <input {...shared} className={`certificate-input ${className}`} />;
 }
 
@@ -559,6 +576,16 @@ export default function CertificateBuilder() {
   const removeItem = (index: number) =>
     setValue("items", draft.items.filter((_, rowIndex) => rowIndex !== index));
 
+  const addChemistry = () =>
+    setValue("chemistry", [...draft.chemistry, { id: "", c: "", cr: "", ni: "", mo: "", mn: "", p: "", s: "", si: "", v: "", cu: "", ce: "", ys: "", uts: "", gl: "", el: "", bend: "", flat: "" }]);
+  const removeChemistry = (index: number) =>
+    setValue("chemistry", draft.chemistry.filter((_, rowIndex) => rowIndex !== index));
+
+  const addRawMaterial = () =>
+    setValue("rawMaterials", [...draft.rawMaterials, { id: "", values: rawLabels.map(() => "") }]);
+  const removeRawMaterial = (index: number) =>
+    setValue("rawMaterials", draft.rawMaterials.filter((_, rowIndex) => rowIndex !== index));
+
   // ── Labels / config ───────────────────────────────────────────────────────
   const metaLeft:  [keyof CertificateDraft["metadata"], string][] = [["client", "Client"], ["workOrder", "Wo.No/Sr.No."], ["certificate", "Certificate No."], ["date", "DATE"]];
   const metaRight: [keyof CertificateDraft["metadata"], string][] = [["po", "PO NO."], ["poDate", "PO DATE"], ["authorityCertificate", "Inspection Authority's Certificate No."], ["authorityDate", "DATE"]];
@@ -595,14 +622,14 @@ export default function CertificateBuilder() {
               onClick={() => setDraft((c) => ({ ...c, format: 'full' }))}
               className={`format-switch-btn ${draft.format !== 'minimal' ? 'active' : ''}`}
             >
-              Letterhead Format
+              Plain Format
             </button>
             <button
               type="button"
               onClick={() => setDraft((c) => ({ ...c, format: 'minimal' }))}
               className={`format-switch-btn ${draft.format === 'minimal' ? 'active' : ''}`}
             >
-              HeaderLess Format
+              Letterhead Format
             </button>
           </div>
           <button
@@ -643,8 +670,8 @@ export default function CertificateBuilder() {
         <section className="preview-wrap">
           <article className={`certificate-sheet ${draft.format === 'minimal' ? 'minimal-format' : ''}`}>
 
-            {/* Watermark logo for minimal format */}
-            {draft.format === 'minimal' && mergedImages.logo && (
+            {/* Watermark logo for full format */}
+            {draft.format !== 'minimal' && mergedImages.logo && (
               <div className="watermark-logo">
                 <img src={mergedImages.logo} alt="Watermark" />
               </div>
@@ -713,7 +740,7 @@ export default function CertificateBuilder() {
                   <tbody>
                     {draft.items.map((item, index) => (
                       <tr key={index}>
-                        {index === 0 && <th rowSpan={draft.items.length} className="part-label">Name of Part</th>}
+                        {index === 0 && <th rowSpan={draft.items.length} className="part-label">{draft.items.length <= 2 ? 'N/P' : 'Name of Part'}</th>}
                         <td><Field value={item.wo}          onChange={(v) => updateItem(index, "wo", v)} /></td>
                         <td><Field value={item.sr}          onChange={(v) => updateItem(index, "sr", v)} /></td>
                         <td className="description-cell">
@@ -752,9 +779,15 @@ export default function CertificateBuilder() {
                 <Field value={draft.heatTreatment} onChange={(v) => setValue("heatTreatment", v)} label="Heat Treatment" />
               </LabelledRow>
               <div className="chemistry-wrap">
+                <div className="item-caption">
+                  <button type="button" className="add-item print-hidden" onClick={addChemistry}>+ Add chemistry row</button>
+                </div>
                 <table className="certificate-table chemistry-table">
                   <thead>
-                    <tr>{chemHeads.map((head) => <th key={head}>{head}</th>)}</tr>
+                    <tr>
+                      {chemHeads.map((head) => <th key={head}>{head}</th>)}
+                      <th className="print-hidden" style={{ width: '30px' }}>Delete</th>
+                    </tr>
                   </thead>
                   <tbody>
                     {draft.chemistry.map((row, i) => (
@@ -764,6 +797,17 @@ export default function CertificateBuilder() {
                             <Field value={row[key]} onChange={(v) => updateChem(i, key, v)} label={`${row.id} ${key}`} />
                           </td>
                         ))}
+                        <td className="print-hidden" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                          <button 
+                            type="button" 
+                            onClick={() => removeChemistry(i)} 
+                            className="remove-item print-hidden" 
+                            aria-label={`Remove chemistry row ${i + 1}`}
+                            style={{ position: 'static', margin: '0 auto' }}
+                          >
+                            ×
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -776,9 +820,18 @@ export default function CertificateBuilder() {
               <div className="section-number">11.</div>
               <div className="raw-content">
                 <div className="raw-heading">Raw Material</div>
+                <div className="item-caption">
+                  <button type="button" className="add-item print-hidden" onClick={addRawMaterial}>+ Add raw material</button>
+                </div>
                 <div className="raw-grid">
                   {draft.rawMaterials.map((block, i) => (
-                    <div className="raw-block" key={i}>
+                    <div 
+                      className="raw-block" 
+                      key={i}
+                      style={{
+                        gridColumn: (i + 1) % 2 === 1 && i === draft.rawMaterials.length - 1 ? '1 / -1' : 'auto'
+                      }}
+                    >
                       <div className="raw-id">
                         <span>ID No. </span>
                         <Field 
@@ -787,6 +840,15 @@ export default function CertificateBuilder() {
                           label={`Raw material ${i + 1} ID`}
                           className="raw-id-input"
                         />
+                        <button 
+                          type="button" 
+                          onClick={() => removeRawMaterial(i)} 
+                          className="remove-item print-hidden" 
+                          aria-label={`Remove raw material ${i + 1}`} 
+                          style={{ position: 'static', marginLeft: '8px', flexShrink: 0 }}
+                        >
+                          ×
+                        </button>
                       </div>
                       {rawLabels.map((label, j) => (
                         <div className="raw-row" key={label}>
@@ -816,8 +878,24 @@ export default function CertificateBuilder() {
               </div>
             </section>
 
-            {/* Footer - only in full format */}
-            {draft.format !== 'minimal' && (
+            {/* Footer - different for each format */}
+            {draft.format === 'minimal' ? (
+              <div className="minimal-footer">
+                <div className="minimal-footer-left">
+                  <div className="minimal-footer-row">
+                    <span className="minimal-footer-label">PLACE:-</span>
+                    <Field value={draft.footer.place} onChange={(v) => setValue("footer", { ...draft.footer, place: v })} className="minimal-footer-input" />
+                  </div>
+                  <div className="minimal-footer-row">
+                    <span className="minimal-footer-label">DATE:-</span>
+                    <Field value={draft.footer.date} onChange={(v) => setValue("footer", { ...draft.footer, date: v })} className="minimal-footer-input" />
+                  </div>
+                </div>
+                <div className="minimal-footer-right">
+                  <span className="page-count">Page 1 of 1</span>
+                </div>
+              </div>
+            ) : (
               <div className="certificate-footer">
                 <div className="footer-place">
                   <span>PLACE:-</span>
