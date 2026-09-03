@@ -550,6 +550,10 @@ export default function CertificateBuilder() {
     setValue("rawMaterials", draft.rawMaterials.map((block, i) =>
       i === index ? { ...block, values: block.values.map((entry, j) => (j === field ? value : entry)) } : block
     ));
+  const updateRawId = (index: number, newId: string) =>
+    setValue("rawMaterials", draft.rawMaterials.map((block, i) =>
+      i === index ? { ...block, id: newId } : block
+    ));
   const addItem    = () =>
     setValue("items", [...draft.items, { wo: "", sr: String(draft.items.length + 1), description: "", size: "", sch: "", id: "", ht: "", qty: "" }]);
   const removeItem = (index: number) =>
@@ -774,8 +778,16 @@ export default function CertificateBuilder() {
                 <div className="raw-heading">Raw Material</div>
                 <div className="raw-grid">
                   {draft.rawMaterials.map((block, i) => (
-                    <div className="raw-block" key={block.id}>
-                      <div className="raw-id">ID No. {block.id}</div>
+                    <div className="raw-block" key={i}>
+                      <div className="raw-id">
+                        <span>ID No. </span>
+                        <Field 
+                          value={block.id} 
+                          onChange={(v) => updateRawId(i, v)} 
+                          label={`Raw material ${i + 1} ID`}
+                          className="raw-id-input"
+                        />
+                      </div>
                       {rawLabels.map((label, j) => (
                         <div className="raw-row" key={label}>
                           <b>{label}</b>

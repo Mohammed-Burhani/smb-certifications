@@ -763,6 +763,19 @@ textarea {
   border-bottom: 1px solid var(--line);
   font-size: 12.285px;
   font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.raw-id span {
+  white-space: nowrap;
+}
+.raw-id-input {
+  flex: 1;
+  min-width: 0;
+  font-weight: 800;
+  padding: 1px 3px !important;
+  font-size: 12.285px !important;
 }
 .raw-row {
   min-height: 24px;
@@ -1092,6 +1105,10 @@ textarea {
     font-size: 9.6px !important;
     padding: 2px 4px !important;
   }
+  .raw-id-input {
+    font-size: 9.6px !important;
+    padding: 0px 2px !important;
+  }
   .raw-row {
     min-height: 11px !important;
   }
@@ -1294,11 +1311,15 @@ textarea {
   opacity: 0.05;
   pointer-events: none;
   z-index: 0;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
 .watermark-logo img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
 .minimal-format > *:not(.watermark-logo) {
   position: relative;
@@ -1313,7 +1334,30 @@ textarea {
   .format-switch {
     display: none !important;
   }
-  .watermark-logo {
-    opacity: 0.04 !important;
+  .minimal-format .watermark-logo {
+    display: flex !important;
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 500px !important;
+    height: 500px !important;
+    opacity: 0.08 !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .watermark-logo img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .minimal-format {
+    position: relative !important;
+    z-index: 1 !important;
   }
 }
