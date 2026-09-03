@@ -585,6 +585,22 @@ export default function CertificateBuilder() {
         </div>
         <div className="workspace-actions">
           {userEmail && <span className="user-badge" title="Logged in admin">{userEmail}</span>}
+          <div className="format-switch">
+            <button
+              type="button"
+              onClick={() => setDraft((c) => ({ ...c, format: 'full' }))}
+              className={`format-switch-btn ${draft.format !== 'minimal' ? 'active' : ''}`}
+            >
+              Letterhead Format
+            </button>
+            <button
+              type="button"
+              onClick={() => setDraft((c) => ({ ...c, format: 'minimal' }))}
+              className={`format-switch-btn ${draft.format === 'minimal' ? 'active' : ''}`}
+            >
+              HeaderLess Format
+            </button>
+          </div>
           <button
             type="button"
             onClick={saveActiveCertificate}
@@ -621,25 +637,36 @@ export default function CertificateBuilder() {
         </div>
 
         <section className="preview-wrap">
-          <article className="certificate-sheet">
+          <article className={`certificate-sheet ${draft.format === 'minimal' ? 'minimal-format' : ''}`}>
 
-            {/* Certificate header */}
-            <header className="certificate-header">
-              <ImageSlot src={mergedImages.logo} label="SMB" compact />
-              <div className="company-block">
-                <Field value={draft.company.name}    onChange={(v) => setCompany("name", v)}    className="company-name"  label="Company name" />
-                <Field value={draft.company.address} onChange={(v) => setCompany("address", v)} className="centered-line" label="Company address" />
-                <Field value={draft.company.contact} onChange={(v) => setCompany("contact", v)} className="centered-line" label="Company contact" />
+            {/* Watermark logo for minimal format */}
+            {draft.format === 'minimal' && mergedImages.logo && (
+              <div className="watermark-logo">
+                <img src={mergedImages.logo} alt="Watermark" />
               </div>
-              <div className="badges">
-                <ImageSlot src={mergedImages.badge1} label="ISO"  compact />
-                <ImageSlot src={mergedImages.badge2} label="QMS"  compact />
-                <ImageSlot src={mergedImages.badge3} label="PESO" compact />
-                {/* <div className="ce-mark">CE</div> */}
-              </div>
-            </header>
+            )}
 
-            <div className="rule" />
+            {/* Certificate header - only in full format */}
+            {draft.format !== 'minimal' && (
+              <>
+                <header className="certificate-header">
+                  <ImageSlot src={mergedImages.logo} label="SMB" compact />
+                  <div className="company-block">
+                    <Field value={draft.company.name}    onChange={(v) => setCompany("name", v)}    className="company-name"  label="Company name" />
+                    <Field value={draft.company.address} onChange={(v) => setCompany("address", v)} className="centered-line" label="Company address" />
+                    <Field value={draft.company.contact} onChange={(v) => setCompany("contact", v)} className="centered-line" label="Company contact" />
+                  </div>
+                  <div className="badges">
+                    <ImageSlot src={mergedImages.badge1} label="ISO"  compact />
+                    <ImageSlot src={mergedImages.badge2} label="QMS"  compact />
+                    <ImageSlot src={mergedImages.badge3} label="PESO" compact />
+                  </div>
+                </header>
+
+                <div className="rule" />
+              </>
+            )}
+
             <h2 className="form-title">FORM III C</h2>
 
             {/* Metadata table */}
@@ -777,20 +804,22 @@ export default function CertificateBuilder() {
               </div>
             </section>
 
-            {/* Place / date + closing rule, pinned to the bottom of the sheet */}
-            <div className="certificate-footer">
-              <div className="footer-place">
-                <span>PLACE:-</span>
-                <Field value={draft.footer.place} onChange={(v) => setValue("footer", { ...draft.footer, place: v })} />
-                <span>DATE:-</span>
-                <Field value={draft.footer.date}  onChange={(v) => setValue("footer", { ...draft.footer, date: v })} />
+            {/* Footer - only in full format */}
+            {draft.format !== 'minimal' && (
+              <div className="certificate-footer">
+                <div className="footer-place">
+                  <span>PLACE:-</span>
+                  <Field value={draft.footer.place} onChange={(v) => setValue("footer", { ...draft.footer, place: v })} />
+                  <span>DATE:-</span>
+                  <Field value={draft.footer.date}  onChange={(v) => setValue("footer", { ...draft.footer, date: v })} />
+                </div>
+                <div className="rule" />
+                <div className="footer-caption">
+                  <span className="page-count">Page 1 of 1</span>
+                  <Field area value={draft.footer.tagline} onChange={(v) => setValue("footer", { ...draft.footer, tagline: v })} className="footer-tagline" label="Company tagline" />
+                </div>
               </div>
-              <div className="rule" />
-              <div className="footer-caption">
-                <span className="page-count">Page 1 of 1</span>
-                <Field area value={draft.footer.tagline} onChange={(v) => setValue("footer", { ...draft.footer, tagline: v })} className="footer-tagline" label="Company tagline" />
-              </div>
-            </div>
+            )}
 
           </article>
         </section>
