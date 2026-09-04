@@ -27,6 +27,16 @@ const isSharedImageKey = (key: keyof Images): key is keyof CompanyImages =>
 
 type CertificateRecord = { id: string; draft: CertificateDraft; savedAt?: string };
 
+// Letterhead clearance: pre-printed stationery has a header band that ends
+// around 32mm down the page, which the Letterhead format keeps clear. Kept in
+// sync with --lh-top / --lh-bottom in globals.css.
+const LETTERHEAD_TOP_MM = 32;
+const LETTERHEAD_BOTTOM_MM = 0;
+// A4 minus the @page margins declared in globals.css (2mm top + 2mm bottom),
+// with a small safety margin for printers that round the printable area down.
+const PRINTABLE_HEIGHT_MM = 291;
+const MM_PER_PX = 25.4 / 96;
+
 // ─── Default / seed data ─────────────────────────────────────────────────────
 
 const itemRows: Item[] = [
@@ -321,6 +331,35 @@ export default function CertificateBuilder() {
   const [toast, setToast] = useState<ToastState>(null);
   const hasHydrated = useRef(false);
   const queryClient = useQueryClient();
+
+  // Chrome evaluates print media queries during `beforeprint`, so the sheet can
+  // be measured exactly as it will be printed. If the content runs past one
+  // page, shrink just the body (the letterhead paddings are divided by the same
+  // factor in CSS, so the cleared bands keep their real size).
+  useEffect(() => {
+    const fit = () => {
+      const sheet = document.querySelector<HTMLElement>(".certificate-sheet.minimal-format");
+      if (!sheet) return;
+      sheet.style.setProperty("--sheet-scale", "1");
+      const bands = LETTERHEAD_TOP_MM + LETTERHEAD_BOTTOM_MM;
+      const body = sheet.getBoundingClientRect().height * MM_PER_PX - bands;
+      const room = PRINTABLE_HEIGHT_MM - bands;
+      if (body <= 0 || room <= 0) return;
+      sheet.style.setProperty("--sheet-scale", String(Math.max(0.5, Math.min(1, room / body))));
+    };
+    const reset = () => {
+      document
+        .querySelector<HTMLElement>(".certificate-sheet.minimal-format")
+        ?.style.setProperty("--sheet-scale", "1");
+    };
+    window.addEventListener("beforeprint", fit);
+    window.addEventListener("afterprint", reset);
+    return () => {
+      window.removeEventListener("beforeprint", fit);
+      window.removeEventListener("afterprint", reset);
+    };
+  }, []);
+
 
   useEffect(() => {
     const supabase = createClient();
@@ -669,6 +708,7 @@ export default function CertificateBuilder() {
 
         <section className="preview-wrap">
           <article className={`certificate-sheet ${draft.format === 'minimal' ? 'minimal-format' : ''}`}>
+            {draft.format === 'minimal' && <div className="letterhead-guide print-hidden" aria-hidden="true">Letterhead area — kept blank</div>}
 
             {/* Watermark logo for full format */}
             {draft.format !== 'minimal' && mergedImages.logo && (
