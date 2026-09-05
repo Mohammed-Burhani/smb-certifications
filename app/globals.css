@@ -458,50 +458,76 @@ textarea {
   padding: 48px 56px 32px;
   background: var(--paper);
   box-shadow: 0 12px 36px #243c5528;
-  font-family: Arial, Helvetica, sans-serif;
+  border: 2px solid #263440;
+  font-family: var(--font-archivo-narrow), Arial, Helvetica, sans-serif;
   color: #171d25;
   display: flex;
   flex-direction: column;
 }
+/* Letterhead header: logo + wordmark left, certification badges right, blue
+   rule under, address lines left-aligned below it. */
 .certificate-header {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  min-height: 92px;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+  min-height: 62px;
   gap: 14px;
 }
 .certificate-header > .image-slot {
-  justify-self: start;
-  align-self: start;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+  flex: 0 0 auto;
+  width: 62px;
+  height: 62px;
+  border-radius: 0;
   font-weight: 800;
   color: var(--blue);
 }
 .company-block {
   text-align: left;
   min-width: 0;
+  padding-top: 4px;
 }
+/* Wordmark sampled from the letterhead PDF: "SMB" #192363, the rest #2650A7,
+   heavy condensed sans, ~32pt. */
 .company-name {
-  display: block;
-  width: 100%;
-  text-align: left;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
   font:
-    700 48.2px/1 Georgia,
-    serif;
-  letter-spacing: 1px;
-  color: #182635;
+    800 32px/1 "Arial Narrow", Arial, Helvetica, sans-serif;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.company-name .company-name-mark,
+.company-name .company-name-rest {
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  text-align: left;
+  padding: 0;
+  width: auto;
+  min-width: 0;
+}
+.company-name .company-name-mark {
+  flex: 0 0 auto;
+  color: #192363;
+}
+.company-name .company-name-rest {
+  flex: 0 1 auto;
+  color: #2650a7;
 }
 .centered-line {
   display: block;
   width: 100%;
   text-align: left;
-  font-size: 12.6px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 400;
+  color: #151616;
+  line-height: 1.5;
 }
 .badges {
-  justify-self: end;
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: end;
@@ -518,14 +544,14 @@ textarea {
   letter-spacing: -4px;
 }
 .rule {
-  border-top: 2px solid #263440;
-  margin-top: 5px;
+  border-top: 2px solid #17356b;
+  margin-top: 4px;
 }
 .form-title {
   margin: 21px 0 4px;
   text-align: center;
   font:
-    700 13.8px/1 Georgia,
+    700 18px/1 Georgia,
     serif;
   text-decoration: underline;
 }
@@ -612,7 +638,7 @@ textarea {
 .certificate-table th,
 .certificate-table td {
   border: 1px solid var(--line);
-  padding: 0;
+  padding: 4px 0;
   vertical-align: middle;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -921,7 +947,9 @@ textarea {
 @media print {
   @page {
     size: A4 portrait;
-    margin: 2mm 8mm;
+    /* 2mm top/bottom fell inside the printer's unprintable strip, so the
+       sheet's own 2px outline was clipped away. 7mm clears it on all sides. */
+    margin: 4mm 5mm;
   }
   html,
   body {
@@ -957,16 +985,30 @@ textarea {
     padding: 0 !important;
     margin: 0 !important;
   }
+  .certificate-sheet:not(.minimal-format) {
+    /* Measured with headless Chrome print-to-pdf: the content is ~4% taller
+       than one A4 page, which put the footer on a second sheet. 0.94 fits with
+       margin (1 page at 0.95, 2 pages at 0.97). */
+    zoom: 0.87 !important;
+  }
   .certificate-sheet {
-    width: 100% !important;
-    max-width: 100% !important;
+    /* width:100% would fill the page box and swallow the margin below, leaving
+       the outline hard against the paper edge. */
+    width: auto !important;
+    max-width: none !important;
+    /* 285mm assumed the printer gives back the full A4 minus the 2mm @page
+       margin. It does not: the footer is pushed past the real printable area
+       and lands on a second sheet. 262mm keeps the footer bottom-anchored with
+       room to spare on printers that reserve ~10mm. */
     min-height: 285mm !important;
     height: auto !important;
     box-sizing: border-box !important;
     padding: 4px 40px 4px !important;
-    margin: 0 auto !important;
+    /* The sheet keeps its own 5mm gutter so the outline stays visible even when
+       the print dialog's Margins setting is "None" and @page is ignored. */
+    margin: 5mm !important;
     box-shadow: none !important;
-    border: none !important;
+    border: 2px solid #263440 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
     page-break-after: avoid !important;
@@ -991,19 +1033,45 @@ textarea {
     gap: 6px !important;
   }
   .certificate-header > .image-slot {
-    width: 72px !important;
-    height: 72px !important;
+    width: 66px !important;
+    height: 26px !important;
     align-self: start !important;
   }
   .company-name {
-    font-size: 26px !important;
+    display: flex !important;
+    align-items: baseline !important;
+    gap: 8px !important;
+    font-size: 39px !important;
+    font-family: "Arial Narrow", Arial, Helvetica, sans-serif !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.3px !important;
+  }
+  .company-name .company-name-mark,
+  .company-name .company-name-rest {
+    font-size: 39px !important;
+    font-family: "Arial Narrow", Arial, Helvetica, sans-serif !important;
+    font-weight: 800 !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+  }
+  .company-name .company-name-mark {
+    color: #192363 !important;
+  }
+  .company-name .company-name-rest {
+    color: #2650a7 !important;
   }
   .centered-line {
-    font-size: 9.8px !important;
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    color: #1c1c1c !important;
+    line-height: 1.4 !important;
+  }
+  .company-block {
+    padding-top: 3px !important;
   }
   .badges .image-slot {
-    width: 36px !important;
-    height: 42px !important;
+    width: 52px !important;
+    height: 40px !important;
   }
   .ce-mark {
     font-size: 23px !important;
@@ -1013,29 +1081,29 @@ textarea {
   }
   .form-title {
     margin: 2px 0 1px !important;
-    font-size: 12.1px !important;
+    font-size: 20px !important;
   }
   .metadata-table {
-    font-size: 12.3px !important;
+    font-size: 10.9px !important;
   }
   .meta-row {
-    min-height: 14px !important;
+    min-height: 12px !important;
   }
   .meta-row b {
-    font-size: 11.6px !important;
+    font-size: 10.1px !important;
     padding: 2px 4px !important;
   }
   .meta-regulation .certificate-input {
-    font-size: 11.6px !important;
+    font-size: 10.1px !important;
     padding: 2px 4px !important;
   }
   .item-caption {
-    font-size: 13.2px !important;
+    font-size: 11.6px !important;
     padding: 1px !important;
   }
   .item-table th {
-    height: 14px !important;
-    font-size: 10.9px !important;
+    height: 11px !important;
+    font-size: 9.7px !important;
   }
   .item-table th:nth-child(1) {
     width: 3.9% !important;
@@ -1074,83 +1142,90 @@ textarea {
     width: 6.4% !important;
   }
   .item-table tbody tr {
-    height: 21px !important;
+    height: 17px !important;
   }
   .item-table td {
-    padding: 0 !important;
+    padding: 2px 0 !important;
   }
   .item-table td .certificate-input {
-    font-size: 10.9px !important;
+    font-size: 9.7px !important;
     padding: 1px 2px !important;
   }
   .item-table .description-cell .certificate-area {
     text-align: left !important;
-    font-size: 10.9px !important;
+    font-size: 9.7px !important;
     min-height: 14px !important;
     line-height: 1.1 !important;
     padding: 1px 2px !important;
   }
   .spec-row {
     min-height: 14px !important;
-    font-size: 11.6px !important;
+    font-size: 10.1px !important;
   }
   .spec-number,
   .spec-label {
     padding: 2px 4px !important;
-    font-size: 11.6px !important;
+    font-size: 10.1px !important;
   }
   .spec-value .certificate-input {
-    font-size: 11.6px !important;
+    font-size: 10.1px !important;
     padding: 1px 3px !important;
   }
   .chemistry-table th {
-    height: 13px !important;
-    font-size: 9.2px !important;
+    height: 10px !important;
+    font-size: 8.2px !important;
   }
   .chemistry-table td .certificate-input {
-    font-size: 10.0px !important;
+    font-size: 8.9px !important;
     padding: 1px 2px !important;
   }
   .raw-section {
-    font-size: 14.1px !important;
+    font-size: 12.4px !important;
   }
   .section-number {
-    font-size: 14.1px !important;
+    font-size: 12.4px !important;
     padding: 2px 3px !important;
   }
   .raw-heading {
-    font-size: 14.1px !important;
+    font-size: 12.4px !important;
     padding: 2px 4px !important;
   }
   .raw-id {
-    font-size: 12.1px !important;
+    font-size: 10.7px !important;
     padding: 2px 4px !important;
   }
   .raw-id-input {
-    font-size: 12.1px !important;
+    font-size: 10.7px !important;
     padding: 0px 2px !important;
   }
   .raw-row {
-    min-height: 14px !important;
+    min-height: 11px !important;
   }
   .raw-row b {
-    font-size: 11.2px !important;
+    font-size: 9.9px !important;
     padding: 2px 3px !important;
   }
   .raw-row .certificate-input {
-    font-size: 11.2px !important;
+    font-size: 9.9px !important;
     padding: 2px 3px !important;
+  }
+  /* Keep the sign-off together: if it cannot fit, the whole block moves rather
+     than splitting PLACE from DATE across the page break. */
+  .declaration,
+  .certificate-footer {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
   .compliance {
     margin-top: 0 !important;
   }
   .compliance-number {
-    font-size: 11.6px !important;
+    font-size: 10.1px !important;
     padding: 2px 3px !important;
   }
   .compliance .certificate-area {
     min-height: 20px !important;
-    font-size: 10.5px !important;
+    font-size: 9.2px !important;
     padding: 2px 4px !important;
     line-height: 1.2 !important;
   }
@@ -1321,7 +1396,6 @@ textarea {
   /* Blank space reserved for the pre-printed letterhead header/footer. */
   --lh-top: 32mm;
   --lh-bottom: 0mm;
-  --sheet-scale: 1;
   /* Match print: the sheet is as tall as its content, no stretched filler. */
   min-height: auto;
   padding-top: var(--lh-top);
@@ -1386,19 +1460,20 @@ textarea {
 .minimal-footer-left {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 .minimal-footer-row {
   display: flex;
-  align-items: center;
+  align-items: baseline;
+  flex-wrap: nowrap;
   gap: 8px;
 }
 .minimal-footer-label {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 800;
   color: #000;
   white-space: nowrap;
-  min-width: 60px;
+  min-width: 46px;
 }
 .minimal-footer-right {
   display: flex;
@@ -1406,8 +1481,9 @@ textarea {
   align-items: flex-end;
 }
 .minimal-footer-input {
-  flex: 1;
-  font-size: 9px !important;
+  flex: 0 1 auto;
+  white-space: nowrap;
+  font-size: 10px !important;
   font-weight: 700;
   padding: 0 !important;
   border: 0 !important;
@@ -1450,15 +1526,20 @@ textarea {
     /* Shrink the body of the certificate so the reserved letterhead margins
        never push the footer onto a second page. The paddings are divided by
        the same factor so the cleared bands keep their real millimetre size. */
-    zoom: var(--sheet-scale, 1) !important;
+    /* The letterhead band costs 32mm of the 291mm printable height, so the body
+       is shrunk by that same proportion. Fixed, not measured: it keeps the
+       minimal format on one page whenever the full format fits on one. */
+    /* 0.85: the 32mm letterhead band plus the 5mm outline gutter leave this
+       much room. Measured — 0.88 spilled onto a second page. */
+    zoom: 0.85 !important;
     /* No forced sheet height: the 285mm floor used by the full format stretches
        the sheet past the printable area once the letterhead margins are added,
        which pushed PLACE/DATE and the page count onto a second sheet. Letting
        the content set its own height keeps the block right under the
        declaration. */
     min-height: 0 !important;
-    padding-top: calc(var(--lh-top, 32mm) / var(--sheet-scale, 1)) !important;
-    padding-bottom: calc(var(--lh-bottom, 0mm) / var(--sheet-scale, 1)) !important;
+    padding-top: calc(var(--lh-top, 32mm) / 0.88) !important;
+    padding-bottom: calc(var(--lh-bottom, 0mm) / 0.88) !important;
   }
   /* The auto top margin only exists to push the footer against a fixed sheet
      height, which the minimal format no longer has. */
@@ -1467,7 +1548,7 @@ textarea {
     margin-top: 15px !important;
   }
   .minimal-format .form-title {
-    margin-top: 50px !important;
+    margin-top: 0 !important;
     margin-bottom: 10px !important;
   }
   .letterhead-guide {
@@ -1478,28 +1559,30 @@ textarea {
     grid-template-columns: 1fr auto !important;
     gap: 15px !important;
     padding: 10px 0 3px 0 !important;
-    margin-top: 15px !important;
+    margin-top: 0 !important;
     border: none !important;
   }
   .minimal-footer-left {
     display: flex !important;
     flex-direction: column !important;
-    gap: 6px !important;
+    gap: 3px !important;
   }
   .minimal-footer-row {
     display: flex !important;
-    align-items: center !important;
+    align-items: baseline !important;
+    flex-wrap: nowrap !important;
     gap: 6px !important;
   }
   .minimal-footer-label {
-    font-size: 7.5px !important;
+    font-size: 9.5px !important;
     font-weight: 800 !important;
     white-space: nowrap !important;
-    min-width: 50px !important;
+    min-width: 42px !important;
   }
   .minimal-footer-input {
-    flex: 1 !important;
-    font-size: 7.5px !important;
+    flex: 0 1 auto !important;
+    white-space: nowrap !important;
+    font-size: 9.5px !important;
     font-weight: 700 !important;
     padding: 0 !important;
     border: none !important;
