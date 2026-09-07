@@ -456,9 +456,9 @@ textarea {
   min-height: 1450px;
   margin: auto;
   padding: 48px 56px 32px;
-  background: var(--paper);
+  background: #ffffff;
   box-shadow: 0 12px 36px #243c5528;
-  font-family: var(--font-archivo-narrow), Arial, Helvetica, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   color: #171d25;
   display: flex;
   flex-direction: column;
@@ -466,74 +466,66 @@ textarea {
 /* Letterhead header: logo + wordmark left, certification badges right, blue
    rule under, address lines left-aligned below it. */
 .certificate-header {
+  width: 100%;
+}
+.certificate-header-top {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  min-height: 62px;
-  gap: 14px;
+  width: 100%;
 }
-.certificate-header > .image-slot {
+.certificate-header-top > .image-slot {
   flex: 0 0 auto;
-  width: 62px;
-  height: 62px;
+  width: 80px;
+  height: 80px;
   border-radius: 0;
   font-weight: 800;
   color: var(--blue);
 }
-.company-block {
-  text-align: left;
-  min-width: 0;
-  padding-top: 4px;
+.company-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 12px;
 }
-/* Wordmark sampled from the letterhead PDF: "SMB" #192363, the rest #2650A7,
-   heavy condensed sans, ~32pt. */
 .company-name {
-  flex: 1 1 auto;
-  min-width: 0;
   display: flex;
   align-items: baseline;
-  gap: 10px;
-  font:
-    800 32px/1 "Arial Narrow",
-    Arial,
-    Helvetica,
-    sans-serif;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  gap: 6px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
 }
-.company-name .company-name-mark,
-.company-name .company-name-rest {
-  font: inherit;
-  letter-spacing: inherit;
-  text-transform: inherit;
-  text-align: left;
-  padding: 0;
-  width: auto;
-  min-width: 0;
+.company-name-mark,
+.company-name-rest {
+  font-family: inherit;
+  font-weight: inherit;
 }
-.company-name .company-name-mark {
-  flex: 0 0 auto;
-  color: #192363;
+.company-name-mark {
+  color: #20242a;
 }
-.company-name .company-name-rest {
-  flex: 0 1 auto;
-  color: #2650a7;
+.company-name-rest {
+  color: #20242a;
 }
-.centered-line {
-  display: block;
+.company-details {
   width: 100%;
+  margin-top: 2px;
+  padding-left: 0;
+}
+.company-detail-field {
+  width: 100%;
+  display: block;
   text-align: left;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 12px;
-  font-weight: 400;
-  color: #151616;
-  line-height: 1.5;
+  font-weight: 600;
+  line-height: 1.4;
 }
 .badges {
-  flex: 0 0 auto;
   display: flex;
   align-items: center;
-  justify-content: end;
-  gap: 5px;
+  gap: 8px;
+  margin-left: auto;
 }
 .badges .image-slot {
   width: 47px;
@@ -875,7 +867,7 @@ textarea {
   display: flex;
   flex-direction: column;
   gap: 0;
-  margin-top: 60px; /* space above QC INCHARGE for the pen signature */
+  margin-top: 30px; /* space above QC INCHARGE for the pen signature */
   margin-left: -5px;
 }
 .signature-block .sign-title {
@@ -959,9 +951,9 @@ textarea {
   background: transparent;
 }
 .declaration .certificate-area {
-  min-height: 24px !important;
+  min-height: 28px !important;
   font-size: 12px !important;
-  line-height: 1.3 !important;
+  line-height: 1.5 !important;
 }
 .certificate-footer {
   margin-top: auto !important; /* now works — sheet has a real fixed height to push against */
@@ -1020,7 +1012,7 @@ textarea {
     size: A4 portrait;
     /* 2mm top/bottom fell inside the printer's unprintable strip, so the
        sheet's own 2px outline was clipped away. 7mm clears it on all sides. */
-    margin: 4mm 5mm;
+    margin: 0mm !important;
   }
   html,
   body {
@@ -1077,7 +1069,7 @@ textarea {
     padding: 4px 40px 4px !important;
     /* The sheet keeps its own 5mm gutter so the outline stays visible even when
        the print dialog's Margins setting is "None" and @page is ignored. */
-    margin: 5mm !important;
+    margin: 1mm !important;
     box-shadow: none !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
@@ -1115,6 +1107,13 @@ textarea {
     font-family: "Arial Narrow", Arial, Helvetica, sans-serif !important;
     font-weight: 800 !important;
     letter-spacing: 0.3px !important;
+  }
+  .company-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 12px;
   }
   .company-name .company-name-mark,
   .company-name .company-name-rest {

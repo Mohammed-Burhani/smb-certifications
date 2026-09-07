@@ -691,26 +691,43 @@ export default function CertificateBuilder() {
             {draft.format !== 'minimal' && (
               <>
                 <header className="certificate-header">
-                  <ImageSlot src={mergedImages.logo} label="SMB" compact />
-                  {/* Fixed wordmark, not editable: it is the company's mark, not
-                      certificate data. Two-tone like the letterhead. */}
-                  <div className="company-name">
-                    <span className="company-name-mark">SMB</span>
-                    <span className="company-name-rest">Fitting Industry</span>
-                  </div>
-                  <div className="badges">
-                    <ImageSlot src={mergedImages.badge1} label="ISO" compact />
-                    <ImageSlot src={mergedImages.badge2} label="QMS" compact />
-                    <ImageSlot src={mergedImages.badge3} label="PESO" compact />
+                  <div className="certificate-header-top">
+                    <ImageSlot
+                      src={mergedImages.logo}
+                      label="SMB"
+                    />
+
+                    <div className="company-info">
+                      <div className="company-name">
+                        <span className="font-serif">SMB Fitting Industry</span>
+                      </div>
+
+                      <div className="company-details">
+                        <Field
+                          value={draft.company.address}
+                          onChange={(v) => setCompany("address", v)}
+                          className="company-detail-field"
+                          label="Company address"
+                        />
+
+                        <Field
+                          value={draft.company.contact}
+                          onChange={(v) => setCompany("contact", v)}
+                          className="company-detail-field"
+                          label="Company contact"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="badges">
+                      <ImageSlot src={mergedImages.badge1} label="ISO" compact />
+                      <ImageSlot src={mergedImages.badge2} label="QMS" compact />
+                      <ImageSlot src={mergedImages.badge3} label="PESO" compact />
+                    </div>
                   </div>
                 </header>
 
                 <div className="rule" />
-
-                <div className="company-block">
-                  <Field value={draft.company.address} onChange={(v) => setCompany("address", v)} className="centered-line" label="Company address" />
-                  <Field value={draft.company.contact} onChange={(v) => setCompany("contact", v)} className="centered-line" label="Company contact" />
-                </div>
               </>
             )}
 
@@ -756,7 +773,7 @@ export default function CertificateBuilder() {
                   <tbody>
                     {draft.items.map((item, index) => (
                       <tr key={index}>
-                        {index === 0 && <th rowSpan={draft.items.length} className="part-label">{draft.items.length <= 2 ? 'N/P' : 'Name of Part'}</th>}
+                        {index === 0 && <th rowSpan={draft.items.length} className="part-label text-[9px]!">Name of Part</th>}
                         <td><Field value={item.wo} onChange={(v) => updateItem(index, "wo", v)} /></td>
                         <td><Field value={item.sr} onChange={(v) => updateItem(index, "sr", v)} /></td>
                         <td className="description-cell">
@@ -915,7 +932,7 @@ export default function CertificateBuilder() {
                     {draft.images.signature && (
                       <button type="button" className="signature-remove print-hidden" onClick={() => remove("signature")}>Remove signature</button>
                     )}
-                    <Field value={draft.signature.title} onChange={(v) => setValue("signature", { ...draft.signature, title: v })} className="sign-title" />
+                    <Field value={draft.signature.title} onChange={(v) => setValue("signature", { ...draft.signature, title: v })} className="sign-title font-serif!" />
                     <div className="declaration">
                       <Field area value={draft.declaration} onChange={(v) => setValue("declaration", v)} label="Declaration" />
                     </div>
