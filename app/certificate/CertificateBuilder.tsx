@@ -739,7 +739,7 @@ export default function CertificateBuilder() {
                 {metaLeft.map(([key, label]) => (
                   <div className="meta-row" key={key}>
                     <b className="text-xs!">{label}</b>
-                    <Field value={draft.metadata[key]} onChange={(v) => setMeta(key, v)} label={label} className="text-xs!" />
+                    <Field value={draft.metadata[key]} onChange={(v) => setMeta(key, v)} label={label} className="text-sm!" />
                   </div>
                 ))}
               </div>
@@ -747,7 +747,7 @@ export default function CertificateBuilder() {
                 {metaRight.map(([key, label]) => (
                   <div className="meta-row" key={key}>
                     <b className="text-xs!">{label}</b>
-                    <Field value={draft.metadata[key]} onChange={(v) => setMeta(key, v)} label={label} className="text-xs!" />
+                    <Field value={draft.metadata[key]} onChange={(v) => setMeta(key, v)} label={label} className="text-sm!" />
                   </div>
                 ))}
               </div>
@@ -777,7 +777,7 @@ export default function CertificateBuilder() {
                         <td><Field value={item.wo} onChange={(v) => updateItem(index, "wo", v)} /></td>
                         <td><Field value={item.sr} onChange={(v) => updateItem(index, "sr", v)} /></td>
                         <td className="description-cell">
-                          <Field area value={item.description} onChange={(v) => updateItem(index, "description", v)} />
+                          <Field area value={item.description} onChange={(v) => updateItem(index, "description", v)} className="text-xs! mt-1 h-[30px]! pt-0!" />
                           <button type="button" onClick={() => removeItem(index)} className="remove-item print-hidden" aria-label={`Remove item ${index + 1}`}>×</button>
                         </td>
                         <td><Field value={item.size} onChange={(v) => updateItem(index, "size", v)} /></td>
@@ -801,7 +801,7 @@ export default function CertificateBuilder() {
                     value={draft.specs[index]}
                     onChange={(v) => setValue("specs", draft.specs.map((entry, i) => (i === index ? v : entry)))}
                     label={label}
-                    className="text-xs!"
+                    className="text-sm!"
                   />
                 </LabelledRow>
               ))}
@@ -828,7 +828,7 @@ export default function CertificateBuilder() {
                       <tr key={i}>
                         {chemKeys.map((key) => (
                           <td key={key}>
-                            <Field value={row[key]} onChange={(v) => updateChem(i, key, v)} label={`${row.id} ${key}`} className="text-xs!" />
+                            <Field value={row[key]} onChange={(v) => updateChem(i, key, v)} label={`${row.id} ${key}`} className="text-sm!" />
                           </td>
                         ))}
                         <td className="print-hidden" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
@@ -900,7 +900,7 @@ export default function CertificateBuilder() {
             <section className="compliance">
               <div className="compliance-number">12.</div>
               <div>
-                <Field area value={draft.compliance} onChange={(v) => setValue("compliance", v)} label="Compliance paragraph" />
+                <Field area value={draft.compliance} onChange={(v) => setValue("compliance", v)} label="Compliance paragraph" className="pt-1! text-[11px]!" />
               </div>
             </section>
 
@@ -975,7 +975,7 @@ export default function CertificateBuilder() {
                 <div></div>
 
                 <span className="page-count text-center text-xs!">
-                  Manufactureres & Exporters of Flanges and Fittings
+                  Manufacturers & Exporters of Flanges and Fittings
                 </span>
 
                 <span className="page-count text-right">

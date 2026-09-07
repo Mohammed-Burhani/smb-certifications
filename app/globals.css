@@ -674,17 +674,17 @@ textarea {
   width: 38px;
 }
 .item-table tbody tr {
-  height: 42px;
+  height: 36px !important;
 }
 .item-table td .certificate-input {
   text-align: center;
   font-size: 14px;
-  padding: 6px 4px;
+  padding: 4px 4px;
 }
 .item-table .description-cell .certificate-area {
   text-align: left;
   line-height: 1.15;
-  padding: 6px 4px;
+  padding: 6px 3px;
   font-size: 12px;
 }
 .description-cell {
@@ -1052,7 +1052,7 @@ textarea {
     /* Measured with headless Chrome print-to-pdf: the content is ~4% taller
        than one A4 page, which put the footer on a second sheet. 0.94 fits with
        margin (1 page at 0.95, 2 pages at 0.97). */
-    zoom: 0.87 !important;
+    zoom: 0.85 !important;
   }
   .certificate-sheet {
     /* width:100% would fill the page box and swallow the margin below, leaving
@@ -1212,7 +1212,7 @@ textarea {
     width: 6.4% !important;
   }
   .item-table tbody tr {
-    height: 17px !important;
+    height: 14px !important;
   }
   .item-table td {
     padding: 2px 0 !important;
