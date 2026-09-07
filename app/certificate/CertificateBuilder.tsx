@@ -905,28 +905,22 @@ export default function CertificateBuilder() {
                       role="button" tabIndex={0}
                       onKeyDown={(e) => e.key === "Enter" && signatureInput.current?.click()}
                     >
-                      {draft.images.signature
-                        ? <img src={draft.images.signature} alt="Signature" />
-                        : <span>Upload signature</span>}
+                      {draft.images.signature && <img src={draft.images.signature} alt="Signature" />}
                       <input ref={signatureInput} className="hidden-input" type="file" accept="image/*" onChange={upload("signature")} />
                     </div>
                     {draft.images.signature && (
                       <button type="button" className="signature-remove print-hidden" onClick={() => remove("signature")}>Remove signature</button>
                     )}
-                    <Field value={draft.signature.name} onChange={(v) => setValue("signature", { ...draft.signature, name: v })} className="sign-name" />
                     <Field value={draft.signature.title} onChange={(v) => setValue("signature", { ...draft.signature, title: v })} className="sign-title" />
                   </div>
                   <div className="declaration">
                     <Field area value={draft.declaration} onChange={(v) => setValue("declaration", v)} label="Declaration" />
                   </div>
                   <div className="stamp-group">
-                    <ImageSlot src={mergedImages.companyStamp} label="Company stamp" compact />
+                    <ImageSlot src={mergedImages.companyStamp} label="" compact />
                   </div>
                   <div className="inspection-group">
-                    <ImageSlot src={mergedImages.inspectionStamp} label="Inspection authority stamp" compact />
-                    <Field value={draft.inspection.person}        onChange={(v) => setValue("inspection", { ...draft.inspection, person: v })} />
-                    <Field value={draft.inspection.authorization} onChange={(v) => setValue("inspection", { ...draft.inspection, authorization: v })} />
-                    <Field value={draft.inspection.date}          onChange={(v) => setValue("inspection", { ...draft.inspection, date: v })} />
+                    <ImageSlot src={mergedImages.inspectionStamp} label="" compact />
                   </div>
                 </>
               )}
@@ -956,12 +950,6 @@ export default function CertificateBuilder() {
                   <Field value={draft.footer.place} onChange={(v) => setValue("footer", { ...draft.footer, place: v })} />
                   <span>DATE:-</span>
                   <Field value={draft.footer.date}  onChange={(v) => setValue("footer", { ...draft.footer, date: v })} />
-                </div>
-                <div className="footer-contact">
-                  <Field value={draft.footer.contactName} onChange={(v) => setValue("footer", { ...draft.footer, contactName: v })} className="footer-contact-name" label="Contact name" />
-                  <Field value={draft.footer.phone}       onChange={(v) => setValue("footer", { ...draft.footer, phone: v })}       className="footer-contact-phone" label="Phone number" />
-                  <Field area value={draft.footer.address} onChange={(v) => setValue("footer", { ...draft.footer, address: v })}    className="footer-address"       label="Address" />
-                  <Field value={draft.footer.email}       onChange={(v) => setValue("footer", { ...draft.footer, email: v })}       className="footer-email"         label="Email address" />
                 </div>
                 <span className="page-count">Page 1 of 1</span>
               </div>
