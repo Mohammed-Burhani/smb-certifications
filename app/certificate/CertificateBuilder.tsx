@@ -87,7 +87,12 @@ const initialDraft: CertificateDraft = {
   declaration: "We have satisfied ourselves and the valve / fittings has been constructed and tested in accordance with the requirements of the Indian Boiler Regulations, 1950. We further certify that the particulars entered here are correct.",
   signature: { name: "YUSUF", title: "QC INCHARGE" },
   inspection: { person: "BHARATKUMAR PARMAR", authorization: "IBR-I / AUTHORIZATION NO.: 110/20", date: "27.05.2026" },
-  footer: { place: "CHENNAI", date: "27.05.2026", tagline: "Manufacturers & Exporters of Pipe Fittings and Flanges" },
+  footer: {
+    place: "CHENNAI", date: "27.05.2026",
+    contactName: "Yusuf", phone: "+91 9840952253",
+    address: "New No. 404/406, Thiruvottiyur High Road, Tondiarpet, Chennai - 600081, Tamil Nadu, India",
+    email: "fittings@smbfittingindustry.com",
+  },
   images: { logo: null, badge1: null, badge2: null, badge3: null, companyStamp: null, inspectionStamp: null, signature: null },
 };
 
@@ -320,6 +325,7 @@ export default function CertificateBuilder() {
   const [activeCertificateId, setActiveCertificateId] = useState<string>("");
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [toast, setToast] = useState<ToastState>(null);
+  const signatureInput = useRef<HTMLInputElement>(null);
   const hasHydrated = useRef(false);
   const queryClient = useQueryClient();
 
@@ -880,12 +886,50 @@ export default function CertificateBuilder() {
               </div>
             </section>
 
-            {/* Signature / declaration section */}
+            {/* Signature section - full detail restored only for the full format;
+                minimal (letterhead) format keeps the compact sign-off. */}
             <section className="signature-section">
-              <Field value={draft.signature.title} onChange={(v) => setValue("signature", { ...draft.signature, title: v })} className="sign-title" />
-              <div className="declaration">
-                <Field area value={draft.declaration} onChange={(v) => setValue("declaration", v)} label="Declaration" />
-              </div>
+              {draft.format === 'minimal' ? (
+                <>
+                  <Field value={draft.signature.title} onChange={(v) => setValue("signature", { ...draft.signature, title: v })} className="sign-title" />
+                  <div className="declaration">
+                    <Field area value={draft.declaration} onChange={(v) => setValue("declaration", v)} label="Declaration" />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="signature-person">
+                    <div
+                      className="signature-pad"
+                      onClick={() => signatureInput.current?.click()}
+                      role="button" tabIndex={0}
+                      onKeyDown={(e) => e.key === "Enter" && signatureInput.current?.click()}
+                    >
+                      {draft.images.signature
+                        ? <img src={draft.images.signature} alt="Signature" />
+                        : <span>Upload signature</span>}
+                      <input ref={signatureInput} className="hidden-input" type="file" accept="image/*" onChange={upload("signature")} />
+                    </div>
+                    {draft.images.signature && (
+                      <button type="button" className="signature-remove print-hidden" onClick={() => remove("signature")}>Remove signature</button>
+                    )}
+                    <Field value={draft.signature.name} onChange={(v) => setValue("signature", { ...draft.signature, name: v })} className="sign-name" />
+                    <Field value={draft.signature.title} onChange={(v) => setValue("signature", { ...draft.signature, title: v })} className="sign-title" />
+                  </div>
+                  <div className="declaration">
+                    <Field area value={draft.declaration} onChange={(v) => setValue("declaration", v)} label="Declaration" />
+                  </div>
+                  <div className="stamp-group">
+                    <ImageSlot src={mergedImages.companyStamp} label="Company stamp" compact />
+                  </div>
+                  <div className="inspection-group">
+                    <ImageSlot src={mergedImages.inspectionStamp} label="Inspection authority stamp" compact />
+                    <Field value={draft.inspection.person}        onChange={(v) => setValue("inspection", { ...draft.inspection, person: v })} />
+                    <Field value={draft.inspection.authorization} onChange={(v) => setValue("inspection", { ...draft.inspection, authorization: v })} />
+                    <Field value={draft.inspection.date}          onChange={(v) => setValue("inspection", { ...draft.inspection, date: v })} />
+                  </div>
+                </>
+              )}
             </section>
 
             {/* Footer - different for each format */}
@@ -913,11 +957,13 @@ export default function CertificateBuilder() {
                   <span>DATE:-</span>
                   <Field value={draft.footer.date}  onChange={(v) => setValue("footer", { ...draft.footer, date: v })} />
                 </div>
-                <div className="rule" />
-                <div className="footer-caption">
-                  <span className="page-count">Page 1 of 1</span>
-                  <Field area value={draft.footer.tagline} onChange={(v) => setValue("footer", { ...draft.footer, tagline: v })} className="footer-tagline" label="Company tagline" />
+                <div className="footer-contact">
+                  <Field value={draft.footer.contactName} onChange={(v) => setValue("footer", { ...draft.footer, contactName: v })} className="footer-contact-name" label="Contact name" />
+                  <Field value={draft.footer.phone}       onChange={(v) => setValue("footer", { ...draft.footer, phone: v })}       className="footer-contact-phone" label="Phone number" />
+                  <Field area value={draft.footer.address} onChange={(v) => setValue("footer", { ...draft.footer, address: v })}    className="footer-address"       label="Address" />
+                  <Field value={draft.footer.email}       onChange={(v) => setValue("footer", { ...draft.footer, email: v })}       className="footer-email"         label="Email address" />
                 </div>
+                <span className="page-count">Page 1 of 1</span>
               </div>
             )}
 
