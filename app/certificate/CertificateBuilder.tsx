@@ -31,8 +31,8 @@ type CertificateRecord = { id: string; draft: CertificateDraft; savedAt?: string
 // ─── Default / seed data ─────────────────────────────────────────────────────
 
 const itemRows: Item[] = [
-  { wo: "5375/1",  sr: "1",  description: "CS, SEAMLESS, ECCENTRIC REDUCER, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 16\" NB X SCH STD, IBR.", size: '16" NB', sch: "SCH STD", id: "CT0754", ht: "TPZ 4238", qty: "1" },
-  { wo: "5375/4",  sr: "4",  description: "CS, SEAMLESS, ELBOW 45° LR, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 6\" NB X SCH STD, R=1.5D, IBR.", size: '6" NB', sch: "SCH STD", id: "CT0832", ht: "HF", qty: "10" },
+  { wo: "5375/1", sr: "1", description: "CS, SEAMLESS, ECCENTRIC REDUCER, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 16\" NB X SCH STD, IBR.", size: '16" NB', sch: "SCH STD", id: "CT0754", ht: "TPZ 4238", qty: "1" },
+  { wo: "5375/4", sr: "4", description: "CS, SEAMLESS, ELBOW 45° LR, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 6\" NB X SCH STD, R=1.5D, IBR.", size: '6" NB', sch: "SCH STD", id: "CT0832", ht: "HF", qty: "10" },
   // { wo: "5375/6",  sr: "6",  description: "CS, SEAMLESS, EQUAL TEE, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 16\" NB X SCH XS, IBR.", size: '16" NB', sch: "SCH XS", id: "CT0778", ht: "TPZ 4238", qty: "1" },
   // { wo: "5375/8",  sr: "8",  description: "CS, SEAMLESS, ELBOW 90° LR, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 3\" NB X SCH 80, R=1.5D, IBR.", size: '3" NB', sch: "SCH 80", id: "CT0844", ht: "TPZ 4231", qty: "6" },
   // { wo: "5375/11", sr: "11", description: "CS, SEAMLESS, ELBOW 45° LR, BW, ASME B16.9, ASTM A234 GRADE WPB-S, SIZE: 3\" NB X SCH 80, R=1.5D, IBR.", size: '3" NB', sch: "SCH 80", id: "CT0844", ht: "TPZ 4231", qty: "2" },
@@ -106,14 +106,14 @@ function Field({ value, onChange, className = "", area = false, label }: {
   value: string; onChange: (value: string) => void; className?: string; area?: boolean; label?: string;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  
+
   useEffect(() => {
     if (area && textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
     }
   }, [value, area]);
-  
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     onChange(e.target.value);
     if (area && e.target instanceof HTMLTextAreaElement) {
@@ -121,7 +121,7 @@ function Field({ value, onChange, className = "", area = false, label }: {
       e.target.style.height = e.target.scrollHeight + 'px';
     }
   };
-  
+
   const shared = { value, onChange: handleChange, "aria-label": label };
   return area
     ? <textarea ref={textareaRef} {...shared} className={`certificate-input certificate-area ${className}`} />
@@ -568,11 +568,11 @@ export default function CertificateBuilder() {
     if (companyImages[key]) mergedImages[key] = companyImages[key];
   });
 
-  const updateItem  = (index: number, key: keyof Item, value: string) =>
+  const updateItem = (index: number, key: keyof Item, value: string) =>
     setValue("items", draft.items.map((row, i) => (i === index ? { ...row, [key]: value } : row)));
-  const updateChem  = (index: number, key: keyof Chemistry, value: string) =>
+  const updateChem = (index: number, key: keyof Chemistry, value: string) =>
     setValue("chemistry", draft.chemistry.map((row, i) => (i === index ? { ...row, [key]: value } : row)));
-  const updateRaw   = (index: number, field: number, value: string) =>
+  const updateRaw = (index: number, field: number, value: string) =>
     setValue("rawMaterials", draft.rawMaterials.map((block, i) =>
       i === index ? { ...block, values: block.values.map((entry, j) => (j === field ? value : entry)) } : block
     ));
@@ -580,7 +580,7 @@ export default function CertificateBuilder() {
     setValue("rawMaterials", draft.rawMaterials.map((block, i) =>
       i === index ? { ...block, id: newId } : block
     ));
-  const addItem    = () =>
+  const addItem = () =>
     setValue("items", [...draft.items, { wo: "", sr: String(draft.items.length + 1), description: "", size: "", sch: "", id: "", ht: "", qty: "" }]);
   const removeItem = (index: number) =>
     setValue("items", draft.items.filter((_, rowIndex) => rowIndex !== index));
@@ -596,7 +596,7 @@ export default function CertificateBuilder() {
     setValue("rawMaterials", draft.rawMaterials.filter((_, rowIndex) => rowIndex !== index));
 
   // ── Labels / config ───────────────────────────────────────────────────────
-  const metaLeft:  [keyof CertificateDraft["metadata"], string][] = [["client", "Client"], ["workOrder", "Wo.No/Sr.No."], ["certificate", "Certificate No."], ["date", "DATE"]];
+  const metaLeft: [keyof CertificateDraft["metadata"], string][] = [["client", "Client"], ["workOrder", "Wo.No/Sr.No."], ["certificate", "Certificate No."], ["date", "DATE"]];
   const metaRight: [keyof CertificateDraft["metadata"], string][] = [["po", "PO NO."], ["poDate", "PO DATE"], ["authorityCertificate", "Inspection Authority's Certificate No."], ["authorityDate", "DATE"]];
 
   const specLabels = [
@@ -699,8 +699,8 @@ export default function CertificateBuilder() {
                     <span className="company-name-rest">Fitting Industry</span>
                   </div>
                   <div className="badges">
-                    <ImageSlot src={mergedImages.badge1} label="ISO"  compact />
-                    <ImageSlot src={mergedImages.badge2} label="QMS"  compact />
+                    <ImageSlot src={mergedImages.badge1} label="ISO" compact />
+                    <ImageSlot src={mergedImages.badge2} label="QMS" compact />
                     <ImageSlot src={mergedImages.badge3} label="PESO" compact />
                   </div>
                 </header>
@@ -714,23 +714,23 @@ export default function CertificateBuilder() {
               </>
             )}
 
-            <h2 className="form-title">FORM III C</h2>
+            <h2 className="form-title mb-2!">FORM III C</h2>
 
             {/* Metadata table */}
             <section className="metadata-table">
               <div>
                 {metaLeft.map(([key, label]) => (
                   <div className="meta-row" key={key}>
-                    <b>{label}</b>
-                    <Field value={draft.metadata[key]} onChange={(v) => setMeta(key, v)} label={label} />
+                    <b className="text-xs!">{label}</b>
+                    <Field value={draft.metadata[key]} onChange={(v) => setMeta(key, v)} label={label} className="text-xs!" />
                   </div>
                 ))}
               </div>
               <div>
                 {metaRight.map(([key, label]) => (
                   <div className="meta-row" key={key}>
-                    <b>{label}</b>
-                    <Field value={draft.metadata[key]} onChange={(v) => setMeta(key, v)} label={label} />
+                    <b className="text-xs!">{label}</b>
+                    <Field value={draft.metadata[key]} onChange={(v) => setMeta(key, v)} label={label} className="text-xs!" />
                   </div>
                 ))}
               </div>
@@ -757,17 +757,17 @@ export default function CertificateBuilder() {
                     {draft.items.map((item, index) => (
                       <tr key={index}>
                         {index === 0 && <th rowSpan={draft.items.length} className="part-label">{draft.items.length <= 2 ? 'N/P' : 'Name of Part'}</th>}
-                        <td><Field value={item.wo}          onChange={(v) => updateItem(index, "wo", v)} /></td>
-                        <td><Field value={item.sr}          onChange={(v) => updateItem(index, "sr", v)} /></td>
+                        <td><Field value={item.wo} onChange={(v) => updateItem(index, "wo", v)} /></td>
+                        <td><Field value={item.sr} onChange={(v) => updateItem(index, "sr", v)} /></td>
                         <td className="description-cell">
                           <Field area value={item.description} onChange={(v) => updateItem(index, "description", v)} />
                           <button type="button" onClick={() => removeItem(index)} className="remove-item print-hidden" aria-label={`Remove item ${index + 1}`}>×</button>
                         </td>
                         <td><Field value={item.size} onChange={(v) => updateItem(index, "size", v)} /></td>
-                        <td><Field value={item.sch}  onChange={(v) => updateItem(index, "sch", v)} /></td>
-                        <td><Field value={item.id}   onChange={(v) => updateItem(index, "id", v)} /></td>
-                        <td><Field value={item.ht}   onChange={(v) => updateItem(index, "ht", v)} /></td>
-                        <td><Field value={item.qty}  onChange={(v) => updateItem(index, "qty", v)} /></td>
+                        <td><Field value={item.sch} onChange={(v) => updateItem(index, "sch", v)} /></td>
+                        <td><Field value={item.id} onChange={(v) => updateItem(index, "id", v)} /></td>
+                        <td><Field value={item.ht} onChange={(v) => updateItem(index, "ht", v)} /></td>
+                        <td><Field value={item.qty} onChange={(v) => updateItem(index, "qty", v)} /></td>
                       </tr>
                     ))}
                   </tbody>
@@ -784,6 +784,7 @@ export default function CertificateBuilder() {
                     value={draft.specs[index]}
                     onChange={(v) => setValue("specs", draft.specs.map((entry, i) => (i === index ? v : entry)))}
                     label={label}
+                    className="text-xs!"
                   />
                 </LabelledRow>
               ))}
@@ -810,14 +811,14 @@ export default function CertificateBuilder() {
                       <tr key={i}>
                         {chemKeys.map((key) => (
                           <td key={key}>
-                            <Field value={row[key]} onChange={(v) => updateChem(i, key, v)} label={`${row.id} ${key}`} />
+                            <Field value={row[key]} onChange={(v) => updateChem(i, key, v)} label={`${row.id} ${key}`} className="text-xs!" />
                           </td>
                         ))}
                         <td className="print-hidden" style={{ textAlign: 'center', verticalAlign: 'middle' }}>
-                          <button 
-                            type="button" 
-                            onClick={() => removeChemistry(i)} 
-                            className="remove-item print-hidden" 
+                          <button
+                            type="button"
+                            onClick={() => removeChemistry(i)}
+                            className="remove-item print-hidden"
                             aria-label={`Remove chemistry row ${i + 1}`}
                             style={{ position: 'static', margin: '0 auto' }}
                           >
@@ -841,8 +842,8 @@ export default function CertificateBuilder() {
                 </div>
                 <div className="raw-grid">
                   {draft.rawMaterials.map((block, i) => (
-                    <div 
-                      className="raw-block" 
+                    <div
+                      className="raw-block"
                       key={i}
                       style={{
                         gridColumn: (i + 1) % 2 === 1 && i === draft.rawMaterials.length - 1 ? '1 / -1' : 'auto'
@@ -850,17 +851,17 @@ export default function CertificateBuilder() {
                     >
                       <div className="raw-id">
                         <span>ID No. </span>
-                        <Field 
-                          value={block.id} 
-                          onChange={(v) => updateRawId(i, v)} 
+                        <Field
+                          value={block.id}
+                          onChange={(v) => updateRawId(i, v)}
                           label={`Raw material ${i + 1} ID`}
                           className="raw-id-input"
                         />
-                        <button 
-                          type="button" 
-                          onClick={() => removeRawMaterial(i)} 
-                          className="remove-item print-hidden" 
-                          aria-label={`Remove raw material ${i + 1}`} 
+                        <button
+                          type="button"
+                          onClick={() => removeRawMaterial(i)}
+                          className="remove-item print-hidden"
+                          aria-label={`Remove raw material ${i + 1}`}
                           style={{ position: 'static', marginLeft: '8px', flexShrink: 0 }}
                         >
                           ×
@@ -868,8 +869,8 @@ export default function CertificateBuilder() {
                       </div>
                       {rawLabels.map((label, j) => (
                         <div className="raw-row" key={label}>
-                          <b>{label}</b>
-                          <Field value={block.values[j]} onChange={(v) => updateRaw(i, j, v)} label={`${block.id} ${label}`} />
+                          <b className="text-xs!">{label}</b>
+                          <Field value={block.values[j]} onChange={(v) => updateRaw(i, j, v)} label={`${block.id} ${label}`} className="text-xs!" />
                         </div>
                       ))}
                     </div>
@@ -890,15 +891,18 @@ export default function CertificateBuilder() {
                 minimal (letterhead) format keeps the compact sign-off. */}
             <section className="signature-section">
               {draft.format === 'minimal' ? (
-                <>
+                <div className="signature-block">
                   <Field value={draft.signature.title} onChange={(v) => setValue("signature", { ...draft.signature, title: v })} className="sign-title" />
                   <div className="declaration">
                     <Field area value={draft.declaration} onChange={(v) => setValue("declaration", v)} label="Declaration" />
                   </div>
-                </>
+                </div>
               ) : (
                 <>
-                  <div className="signature-person">
+                  <div className="signature-block">
+                    {/* Signature pad still tappable to attach a scanned signature, sitting
+            in the reserved space above the title; hidden visually if empty so
+            it doesn't add a gap of its own. */}
                     <div
                       className="signature-pad"
                       onClick={() => signatureInput.current?.click()}
@@ -912,15 +916,21 @@ export default function CertificateBuilder() {
                       <button type="button" className="signature-remove print-hidden" onClick={() => remove("signature")}>Remove signature</button>
                     )}
                     <Field value={draft.signature.title} onChange={(v) => setValue("signature", { ...draft.signature, title: v })} className="sign-title" />
-                  </div>
-                  <div className="declaration">
-                    <Field area value={draft.declaration} onChange={(v) => setValue("declaration", v)} label="Declaration" />
+                    <div className="declaration">
+                      <Field area value={draft.declaration} onChange={(v) => setValue("declaration", v)} label="Declaration" />
+                    </div>
                   </div>
                   <div className="stamp-group">
                     <ImageSlot src={mergedImages.companyStamp} label="" compact />
                   </div>
                   <div className="inspection-group">
                     <ImageSlot src={mergedImages.inspectionStamp} label="" compact />
+                  </div>
+                  <div className="footer-place">
+                    <span>PLACE:-</span>
+                    <Field value={draft.footer.place} onChange={(v) => setValue("footer", { ...draft.footer, place: v })} />
+                    <span>DATE:-</span>
+                    <Field value={draft.footer.date} onChange={(v) => setValue("footer", { ...draft.footer, date: v })} />
                   </div>
                 </>
               )}
@@ -944,14 +954,16 @@ export default function CertificateBuilder() {
                 </div>
               </div>
             ) : (
-              <div className="certificate-footer">
-                <div className="footer-place">
-                  <span>PLACE:-</span>
-                  <Field value={draft.footer.place} onChange={(v) => setValue("footer", { ...draft.footer, place: v })} />
-                  <span>DATE:-</span>
-                  <Field value={draft.footer.date}  onChange={(v) => setValue("footer", { ...draft.footer, date: v })} />
-                </div>
-                <span className="page-count">Page 1 of 1</span>
+              <div className="certificate-footer grid grid-cols-3 items-center w-full">
+                <div></div>
+
+                <span className="page-count text-center text-xs!">
+                  Manufactureres & Exporters of Flanges and Fittings
+                </span>
+
+                <span className="page-count text-right">
+                  Page 1 of 1
+                </span>
               </div>
             )}
 
