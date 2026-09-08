@@ -83,7 +83,7 @@ const initialDraft: CertificateDraft = {
   heatTreatment: "(1,6,8,11,14,30) NORMALIZED AT 910°C  (4,29) HF- Hot Formed (Temp. 620°C to 980°C)",
   chemistry: chemistryRows,
   rawMaterials,
-  compliance: "The Part has been designed and constructed to comply with Indian Boiler Regulations 1950 for a maximum working pressure of [as mentioned above] and maximum temperature of [as mentioned above] in the presence of our responsible representative whose signature is appended here under - finally inspected on [date]. *Hydro test will be carried out at site",
+  compliance: "The Part has been designed and constructed to comply with Indian Boiler Regulations 1950 for a maximum working pressure of [as mentioned above] and maximum temperature of [as mentioned above] in the presence of our responsible representative whose signature is appended here under - finally inspected on [date].\n*Hydro test will be carried out at site",
   declaration: "We have satisfied ourselves and the valve / fittings has been constructed and tested in accordance with the requirements of the Indian Boiler Regulations, 1950. We further certify that the particulars entered here are correct.",
   signature: { name: "YUSUF", title: "QC INCHARGE" },
   inspection: { person: "BHARATKUMAR PARMAR", authorization: "IBR-I / AUTHORIZATION NO.: 110/20", date: "27.05.2026" },
