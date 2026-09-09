@@ -467,6 +467,7 @@ textarea {
    rule under, address lines left-aligned below it. */
 .certificate-header {
   width: 100%;
+  padding-top: 24px;
 }
 .certificate-header-top {
   display: flex;
