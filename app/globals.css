@@ -167,9 +167,36 @@ textarea {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: 520px;
+  max-height: 380px;
   overflow-y: auto;
+  overflow-x: hidden;
   padding-right: 2px;
+}
+
+/* Custom scrollbar styling */
+.certificate-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.certificate-list::-webkit-scrollbar-track {
+  background: #f1f4f7;
+  border-radius: 4px;
+}
+
+.certificate-list::-webkit-scrollbar-thumb {
+  background: #c7d1dc;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.certificate-list::-webkit-scrollbar-thumb:hover {
+  background: #9eaab8;
+}
+
+/* Firefox scrollbar */
+.certificate-list {
+  scrollbar-width: thin;
+  scrollbar-color: #c7d1dc #f1f4f7;
 }
 
 /* Certificate Card in Sidebar */
@@ -177,8 +204,11 @@ textarea {
   border: 1px solid #dde3e8;
   border-radius: 8px;
   background: #fbfcfd;
-  overflow: hidden;
+  overflow: visible;
   transition: all 0.15s ease;
+  min-height: 110px;
+  display: flex;
+  flex-direction: column;
 }
 .certificate-card:hover {
   border-color: #b5c7d8;
@@ -196,6 +226,7 @@ textarea {
   padding: 10px 11px 8px;
   cursor: pointer;
   user-select: none;
+  flex: 0 0 auto;
 }
 .card-top-line {
   display: flex;
@@ -252,6 +283,8 @@ textarea {
   align-items: center;
   border-top: 1px solid #e7ecf0;
   background: #ffffff;
+  flex: 0 0 auto;
+  margin-top: auto;
 }
 .card-action-btn {
   flex: 1;
