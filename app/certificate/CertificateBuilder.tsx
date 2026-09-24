@@ -927,8 +927,8 @@ export default function CertificateBuilder() {
               ) : (
                 <>
                   <div className="stamp-box stamp-box-maker-rep">Maker Representative<br />(Name and signature)</div>
-                  <div className="stamp-box translate-y-10 stamp-box-maker">Maker<br />(Name and signature)</div>
-                  <div className="stamp-box translate-y-16 stamp-box-inspect">Inspecting Authority</div>
+                  <div className="stamp-box translate-y-25 stamp-box-maker">Maker&nbsp;&nbsp;(Name and signature)</div>
+                  <div className="stamp-box translate-y-25 stamp-box-inspect">Inspecting Authority</div>
                   <div className="declaration">
                     <Field area value={draft.declaration} onChange={(v) => setValue("declaration", v)} label="Declaration" />
                   </div>
