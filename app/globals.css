@@ -690,13 +690,13 @@ textarea {
   width: 38px;
 }
 .item-table th:nth-child(4) {
-  width: 457px;
+  width: 441px;
 }
 .item-table th:nth-child(5) {
   width: 59px;
 }
 .item-table th:nth-child(6) {
-  width: 66px;
+  width: 82px;
 }
 .item-table th:nth-child(7) {
   width: 57px;
@@ -1261,13 +1261,13 @@ textarea {
     width: 4.4% !important;
   }
   .item-table th:nth-child(4) {
-    width: 52.6% !important;
+    width: 50.8% !important;
   }
   .item-table th:nth-child(5) {
     width: 6.8% !important;
   }
   .item-table th:nth-child(6) {
-    width: 7.6% !important;
+    width: 9.4% !important;
   }
   .item-table th:nth-child(7) {
     width: 6.6% !important;
