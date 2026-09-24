@@ -146,12 +146,7 @@ function LabelledRow({ number, label, children, extraLabel }: { number: string; 
       <div className="spec-number">{number}</div>
       <div className="spec-label">{label}</div>
       <div className="spec-value">{children}</div>
-      {extraLabel && (
-        <>
-          <div className="spec-label">{extraLabel}</div>
-          <div className="spec-value" />
-        </>
-      )}
+      {extraLabel && <div className="spec-value spec-value-extra">{extraLabel}</div>}
     </div>
   );
 }
@@ -786,7 +781,7 @@ export default function CertificateBuilder() {
                           <button type="button" onClick={() => removeItem(index)} className="remove-item print-hidden" aria-label={`Remove item ${index + 1}`}>×</button>
                         </td>
                         <td><Field value={item.size} onChange={(v) => updateItem(index, "size", v)} /></td>
-                        <td><Field value={item.sch} onChange={(v) => updateItem(index, "sch", v)} /></td>
+                        <td><Field area value={item.sch} onChange={(v) => updateItem(index, "sch", v)} className="text-xs! whitespace-normal!" /></td>
                         <td><Field value={item.id} onChange={(v) => updateItem(index, "id", v)} /></td>
                         <td><Field value={item.ht} onChange={(v) => updateItem(index, "ht", v)} /></td>
                         <td><Field value={item.qty} onChange={(v) => updateItem(index, "qty", v)} /></td>

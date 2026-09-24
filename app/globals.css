@@ -754,7 +754,15 @@ textarea {
   font-size: 14px;
 }
 .spec-row-extra {
-  grid-template-columns: 25px 195px 1fr 160px 1fr;
+  grid-template-columns: 25px 195px 1fr 1fr;
+}
+.spec-value-extra {
+  border-left: 1px solid var(--line);
+  padding: 6px;
+  font-weight: 700;
+  text-align: left;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 .spec-number,
 .spec-label {
