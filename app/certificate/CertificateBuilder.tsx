@@ -140,12 +140,18 @@ function ImageSlot({ src, label, onUpload, onRemove, compact = false }: {
   );
 }
 
-function LabelledRow({ number, label, children }: { number: string; label: string; children: ReactNode }) {
+function LabelledRow({ number, label, children, extraLabel }: { number: string; label: string; children: ReactNode; extraLabel?: string }) {
   return (
-    <div className="spec-row">
+    <div className={`spec-row ${extraLabel ? "spec-row-extra" : ""}`}>
       <div className="spec-number">{number}</div>
       <div className="spec-label">{label}</div>
       <div className="spec-value">{children}</div>
+      {extraLabel && (
+        <>
+          <div className="spec-label">{extraLabel}</div>
+          <div className="spec-value" />
+        </>
+      )}
     </div>
   );
 }
@@ -597,11 +603,11 @@ export default function CertificateBuilder() {
 
   // ── Labels / config ───────────────────────────────────────────────────────
   const metaLeft: [keyof CertificateDraft["metadata"], string][] = [["client", "Client"], ["workOrder", "Wo.No/Sr.No."], ["certificate", "Certificate No."], ["date", "DATE"]];
-  const metaRight: [keyof CertificateDraft["metadata"], string][] = [["po", "PO NO."], ["poDate", "PO DATE"], ["authorityCertificate", "Inspection Authority's Certificate No."], ["authorityDate", "DATE"]];
+  const metaRight: [keyof CertificateDraft["metadata"], string][] = [["po", "PO NO."], ["authorityDate", "DATE"], ["authorityCertificate", "Inspection Authority's Certificate No."]];
 
   const specLabels = [
     "Maker's Name and Address", "Intended Working Pressure", "Intended Working Temperature",
-    "Hydraulic Test Pressure", "Main Dimensions", "Drawing No.", "Identification mark",
+    "Hydraulic Test Pressure", "Material Specification", "Drawing No. / Standard Ref.", "Identification mark",
     "Chemical & Physical Test Certi. No.",
   ];
   const chemKeys: (keyof Chemistry)[] = ["id", "c", "cr", "ni", "mo", "mn", "p", "s", "si", "v", "cu", "ce", "ys", "uts", "gl", "el", "bend", "flat"];
@@ -795,7 +801,12 @@ export default function CertificateBuilder() {
             {/* Spec list */}
             <section className="spec-list">
               {specLabels.map((label, index) => (
-                <LabelledRow key={label} number={String(index + 2)} label={label}>
+                <LabelledRow
+                  key={label}
+                  number={String(index + 2)}
+                  label={label}
+                  extraLabel={label === "Identification mark" ? "Inspection Authority Stamp" : undefined}
+                >
                   <Field
                     area={index > 5}
                     value={draft.specs[index]}

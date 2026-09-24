@@ -753,6 +753,9 @@ textarea {
   border-top: 0;
   font-size: 14px;
 }
+.spec-row-extra {
+  grid-template-columns: 25px 195px 1fr 160px 1fr;
+}
 .spec-number,
 .spec-label {
   padding: 6px;
