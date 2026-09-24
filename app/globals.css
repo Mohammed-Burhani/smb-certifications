@@ -754,7 +754,7 @@ textarea {
   font-size: 14px;
 }
 .spec-row-extra {
-  grid-template-columns: 25px 195px 1fr 1fr;
+  grid-template-columns: 25px 195px 1fr 180px;
 }
 .spec-value-extra {
   border-left: 1px solid var(--line);
@@ -902,7 +902,7 @@ textarea {
 }
 .signature-section {
   min-height: 84px;
-  padding: 4px 3px 0;
+  padding: 20px 3px 0;
   display: grid;
   grid-template-columns: 1fr auto auto;
   gap: 2px 14px;
