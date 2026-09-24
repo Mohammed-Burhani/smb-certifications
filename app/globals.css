@@ -785,7 +785,7 @@ textarea {
   font-size: 9.5px;
 }
 .chemistry-table th:nth-child(1) {
-  width: 58px;
+  width: 78px;
 }
 .chemistry-table th:nth-child(n + 2):nth-child(-n + 12) {
   width: 43px;
@@ -1287,7 +1287,7 @@ textarea {
     width: 4.4% !important;
   }
   .chemistry-table th:nth-child(1) {
-    width: 6.7% !important;
+    width: 9% !important;
   }
   .chemistry-table th:nth-child(n + 2):nth-child(-n + 12) {
     width: 5% !important;
