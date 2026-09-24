@@ -331,7 +331,6 @@ export default function CertificateBuilder() {
   const [activeCertificateId, setActiveCertificateId] = useState<string>("");
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [toast, setToast] = useState<ToastState>(null);
-  const signatureInput = useRef<HTMLInputElement>(null);
   const hasHydrated = useRef(false);
   const queryClient = useQueryClient();
 
@@ -927,32 +926,11 @@ export default function CertificateBuilder() {
                 </div>
               ) : (
                 <>
-                  <div className="signature-block">
-                    {/* Signature pad still tappable to attach a scanned signature, sitting
-            in the reserved space above the title; hidden visually if empty so
-            it doesn't add a gap of its own. */}
-                    <div
-                      className="signature-pad"
-                      onClick={() => signatureInput.current?.click()}
-                      role="button" tabIndex={0}
-                      onKeyDown={(e) => e.key === "Enter" && signatureInput.current?.click()}
-                    >
-                      {draft.images.signature && <img src={draft.images.signature} alt="Signature" />}
-                      <input ref={signatureInput} className="hidden-input" type="file" accept="image/*" onChange={upload("signature")} />
-                    </div>
-                    {draft.images.signature && (
-                      <button type="button" className="signature-remove print-hidden" onClick={() => remove("signature")}>Remove signature</button>
-                    )}
-                    <Field value={draft.signature.title} onChange={(v) => setValue("signature", { ...draft.signature, title: v })} className="sign-title font-serif!" />
-                    <div className="declaration">
-                      <Field area value={draft.declaration} onChange={(v) => setValue("declaration", v)} label="Declaration" />
-                    </div>
-                  </div>
-                  <div className="stamp-group">
-                    <ImageSlot src={mergedImages.companyStamp} label="" compact />
-                  </div>
-                  <div className="inspection-group">
-                    <ImageSlot src={mergedImages.inspectionStamp} label="" compact />
+                  <div className="stamp-box stamp-box-maker-rep">Maker Representative<br />(Name and signature)</div>
+                  <div className="stamp-box translate-y-10 stamp-box-maker">Maker<br />(Name and signature)</div>
+                  <div className="stamp-box translate-y-16 stamp-box-inspect">Inspecting Authority</div>
+                  <div className="declaration">
+                    <Field area value={draft.declaration} onChange={(v) => setValue("declaration", v)} label="Declaration" />
                   </div>
                   <div className="footer-place">
                     <span>PLACE:-</span>
