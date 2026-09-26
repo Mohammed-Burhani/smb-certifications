@@ -71,6 +71,7 @@ const initialDraft: CertificateDraft = {
     certificate: "", date: "27.05.2026", po: "362/241067222", poDate: "06.04.2026",
     authorityCertificate: "8121029213/624", authorityDate: "27.05.2026",
     regulation: "Certificate of Manufacturing and test Boiler Mounting and fitting regulation 4(g) of Indian Boiler Regulation 1950.",
+    extraNote: "",
   },
   items: itemRows,
   specs: [
@@ -410,6 +411,7 @@ export default function CertificateBuilder() {
         draft: {
           ...c.payload,
           footer: { ...initialDraft.footer, ...c.payload.footer },
+          metadata: { ...initialDraft.metadata, ...c.payload.metadata },
           rawMaterials: c.payload.rawMaterials.map((block) => ({
             ...block,
             values: rawLabels.map((_, i) => block.values[i] ?? ""),
@@ -596,8 +598,8 @@ export default function CertificateBuilder() {
     setValue("rawMaterials", draft.rawMaterials.filter((_, rowIndex) => rowIndex !== index));
 
   // ── Labels / config ───────────────────────────────────────────────────────
-  const metaLeft: [keyof CertificateDraft["metadata"], string][] = [["client", "Client"], ["workOrder", "Wo.No/Sr.No."], ["certificate", "Certificate No."], ["date", "DATE"]];
-  const metaRight: [keyof CertificateDraft["metadata"], string][] = [["po", "PO NO."], ["authorityDate", "DATE"], ["authorityCertificate", "Inspection Authority's Certificate No."]];
+  const metaLeft: [keyof CertificateDraft["metadata"], string][] = [["client", "Client"], ["workOrder", "Wo.No/Sr.No."]];
+  const metaRight: [keyof CertificateDraft["metadata"], string][] = [["certificate", "Certificate No."], ["authorityDate", "DATE"], ["authorityCertificate", "Inspection Authority's Certificate No."]];
 
   const specLabels = [
     "Maker's Name and Address", "Intended Working Pressure", "Intended Working Temperature",
@@ -742,6 +744,9 @@ export default function CertificateBuilder() {
                     <Field value={draft.metadata[key]} onChange={(v) => setMeta(key, v)} label={label} className="text-sm!" />
                   </div>
                 ))}
+                <div className="meta-row meta-row-note">
+                  <Field value={draft.metadata.extraNote} onChange={(v) => setMeta("extraNote", v)} label="Note" className="text-sm!" />
+                </div>
               </div>
               <div>
                 {metaRight.map(([key, label]) => (

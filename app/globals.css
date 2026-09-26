@@ -615,6 +615,14 @@ textarea {
   font-weight: 700;
   font-size: 12px;
 }
+.meta-row-note {
+  grid-template-columns: 1fr;
+}
+.meta-row-note .certificate-input {
+  padding: 8px 9px;
+  font-weight: 700;
+  color: #1a3fa0;
+}
 .certificate-input {
   width: 100%;
   min-width: 0;
