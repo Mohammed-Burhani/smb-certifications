@@ -723,6 +723,9 @@ textarea {
   font-size: 14px;
   padding: 4px 4px;
 }
+.item-table td .certificate-input.item-value-lg {
+  font-size: 16px;
+}
 .item-table .description-cell .certificate-area {
   text-align: left;
   line-height: 1.15;
@@ -1310,6 +1313,9 @@ textarea {
   .item-table td .certificate-input {
     font-size: 9.7px !important;
     padding: 1px 2px !important;
+  }
+  .item-table td .certificate-input.item-value-lg {
+    font-size: 11px !important;
   }
   .item-table .description-cell .certificate-area {
     text-align: left !important;

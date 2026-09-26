@@ -785,11 +785,11 @@ export default function CertificateBuilder() {
                           <Field area value={item.description} onChange={(v) => updateItem(index, "description", v)} className="text-xs! mt-1 h-[30px]! pt-0!" />
                           <button type="button" onClick={() => removeItem(index)} className="remove-item print-hidden" aria-label={`Remove item ${index + 1}`}>×</button>
                         </td>
-                        <td><Field value={item.size} onChange={(v) => updateItem(index, "size", v)} /></td>
+                        <td><Field value={item.size} onChange={(v) => updateItem(index, "size", v)} className="item-value-lg" /></td>
                         <td><Field area value={item.sch} onChange={(v) => updateItem(index, "sch", v)} className="text-xs! whitespace-normal!" /></td>
                         <td><Field value={item.id} onChange={(v) => updateItem(index, "id", v)} /></td>
-                        <td><Field value={item.ht} onChange={(v) => updateItem(index, "ht", v)} /></td>
-                        <td><Field value={item.qty} onChange={(v) => updateItem(index, "qty", v)} /></td>
+                        <td><Field value={item.ht} onChange={(v) => updateItem(index, "ht", v)} className="item-value-lg" /></td>
+                        <td><Field value={item.qty} onChange={(v) => updateItem(index, "qty", v)} className="item-value-lg" /></td>
                       </tr>
                     ))}
                   </tbody>
