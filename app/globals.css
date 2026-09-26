@@ -616,7 +616,9 @@ textarea {
   font-size: 12px;
 }
 .meta-row-note {
+  grid-column: 1/-1;
   grid-template-columns: 1fr;
+  border-right: 0 !important;
 }
 .meta-row-note .certificate-input {
   padding: 8px 9px;
@@ -1036,7 +1038,7 @@ textarea {
 }
 .stamp-box-maker,
 .stamp-box-inspect {
-  text-align: right;
+  /* text-align: right; */
   justify-content: flex-end;
   white-space: nowrap;
 }

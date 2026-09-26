@@ -599,7 +599,7 @@ export default function CertificateBuilder() {
 
   // ── Labels / config ───────────────────────────────────────────────────────
   const metaLeft: [keyof CertificateDraft["metadata"], string][] = [["client", "Client"], ["workOrder", "Wo.No/Sr.No."]];
-  const metaRight: [keyof CertificateDraft["metadata"], string][] = [["certificate", "Certificate No."], ["authorityDate", "DATE"], ["authorityCertificate", "Inspection Authority's Certificate No."]];
+  const metaRight: [keyof CertificateDraft["metadata"], string][] = [["certificate", "Certificate No."], ["authorityDate", "DATE"]];
 
   const specLabels = [
     "Maker's Name and Address", "Intended Working Pressure", "Intended Working Temperature",
@@ -744,9 +744,6 @@ export default function CertificateBuilder() {
                     <Field value={draft.metadata[key]} onChange={(v) => setMeta(key, v)} label={label} className="text-sm!" />
                   </div>
                 ))}
-                <div className="meta-row meta-row-note">
-                  <Field area value={draft.metadata.extraNote} onChange={(v) => setMeta("extraNote", v)} label="Note" className="text-sm!" />
-                </div>
               </div>
               <div>
                 {metaRight.map(([key, label]) => (
@@ -755,6 +752,9 @@ export default function CertificateBuilder() {
                     <Field value={draft.metadata[key]} onChange={(v) => setMeta(key, v)} label={label} className="text-sm!" />
                   </div>
                 ))}
+              </div>
+              <div className="meta-row meta-row-note">
+                <Field area value={draft.metadata.extraNote} onChange={(v) => setMeta("extraNote", v)} label="Note" className="text-sm!" />
               </div>
               <div className="meta-regulation">
                 <Field value={draft.metadata.regulation} onChange={(v) => setMeta("regulation", v)} label="Certificate regulation" />
@@ -926,9 +926,9 @@ export default function CertificateBuilder() {
                 </div>
               ) : (
                 <>
-                  <div className="stamp-box stamp-box-maker-rep">Maker Representative<br />(Name and signature)</div>
-                  <div className="stamp-box stamp-box-maker">Maker<br />(Name and Signature)</div>
-                  <div className="declaration">
+                  <div className="stamp-box -translate-y-7 stamp-box-maker-rep">Maker Representative<br />(Name and signature)</div>
+                  <div className="stamp-box -translate-y-7 stamp-box-maker -translate-x-20">Maker<br />(Name and Signature)</div>
+                  <div className="declaration -translate-y-7">
                     <Field area value={draft.declaration} onChange={(v) => setValue("declaration", v)} label="Declaration" />
                   </div>
                   <div className="footer-place">
