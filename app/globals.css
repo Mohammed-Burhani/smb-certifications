@@ -620,8 +620,6 @@ textarea {
 }
 .meta-row-note .certificate-input {
   padding: 8px 9px;
-  font-weight: 700;
-  color: #1a3fa0;
 }
 .certificate-input {
   width: 100%;
@@ -912,7 +910,7 @@ textarea {
   min-height: 84px;
   padding: 20px 3px 0;
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr auto;
   gap: 2px 14px;
 }
 .stamp-box-maker-rep {
@@ -926,18 +924,19 @@ textarea {
   grid-column: 2;
   grid-row: 1;
 }
-.stamp-box-inspect {
-  grid-column: 3;
-  grid-row: 1;
-}
 .declaration {
-  grid-column: 1;
+  grid-column: 1/-1;
   grid-row: 2;
-  max-width: 620px;
+  max-width: none;
 }
 .footer-place {
   grid-column: 1;
   grid-row: 3;
+}
+.stamp-box-inspect {
+  grid-column: 2;
+  grid-row: 3;
+  align-self: end;
 }
 .signature-block {
   display: flex;
@@ -1060,13 +1059,10 @@ textarea {
 }
 .footer-place {
   display: grid;
-  grid-template-columns: 40px 1fr;
+  grid-template-columns: 1fr;
   gap: 0;
   font-size: 9.5px !important;
   font-weight: 800;
-}
-.footer-place span {
-  align-self: center;
 }
 .footer-place .certificate-input {
   padding-left: 0;

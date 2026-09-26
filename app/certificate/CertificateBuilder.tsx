@@ -71,7 +71,7 @@ const initialDraft: CertificateDraft = {
     certificate: "", date: "27.05.2026", po: "362/241067222", poDate: "06.04.2026",
     authorityCertificate: "8121029213/624", authorityDate: "27.05.2026",
     regulation: "Certificate of Manufacturing and test Boiler Mounting and fitting regulation 4(g) of Indian Boiler Regulation 1950.",
-    extraNote: "",
+    extraNote: "Inspecting Authority Certificate No. 812505833 / 001 Date: 03-09-2026",
   },
   items: itemRows,
   specs: [
@@ -745,7 +745,7 @@ export default function CertificateBuilder() {
                   </div>
                 ))}
                 <div className="meta-row meta-row-note">
-                  <Field value={draft.metadata.extraNote} onChange={(v) => setMeta("extraNote", v)} label="Note" className="text-sm!" />
+                  <Field area value={draft.metadata.extraNote} onChange={(v) => setMeta("extraNote", v)} label="Note" className="text-sm!" />
                 </div>
               </div>
               <div>
@@ -916,7 +916,7 @@ export default function CertificateBuilder() {
 
             {/* Signature section - full detail restored only for the full format;
                 minimal (letterhead) format keeps the compact sign-off. */}
-            <section className="signature-section">
+            <section className="signature-section mt-14">
               {draft.format === 'minimal' ? (
                 <div className="signature-block">
                   <Field value={draft.signature.title} onChange={(v) => setValue("signature", { ...draft.signature, title: v })} className="sign-title" />
@@ -927,17 +927,15 @@ export default function CertificateBuilder() {
               ) : (
                 <>
                   <div className="stamp-box stamp-box-maker-rep">Maker Representative<br />(Name and signature)</div>
-                  <div className="stamp-box translate-y-25 stamp-box-maker">Maker&nbsp;&nbsp;(Name and signature)</div>
-                  <div className="stamp-box translate-y-25 stamp-box-inspect">Inspecting Authority</div>
+                  <div className="stamp-box stamp-box-maker">Maker<br />(Name and Signature)</div>
                   <div className="declaration">
                     <Field area value={draft.declaration} onChange={(v) => setValue("declaration", v)} label="Declaration" />
                   </div>
                   <div className="footer-place">
-                    <span>PLACE:-</span>
                     <Field value={draft.footer.place} onChange={(v) => setValue("footer", { ...draft.footer, place: v })} />
-                    <span>DATE:-</span>
                     <Field value={draft.footer.date} onChange={(v) => setValue("footer", { ...draft.footer, date: v })} />
                   </div>
+                  <div className="stamp-box stamp-box-inspect">Inspecting Authority</div>
                 </>
               )}
             </section>
